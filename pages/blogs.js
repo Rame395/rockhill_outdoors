@@ -70,23 +70,23 @@ export default function BlogsPage() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {blogs.map((blog) => (
                   <Link
                     key={blog.id}
                     href={`/blogs/${blog.slug}`}
                     className="block group"
                   >
-                    <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group-hover:shadow-md transition-shadow">
+                    <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group-hover:shadow-md transition-shadow h-full flex flex-col">
                       {blog.featuredImage && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={blog.featuredImage}
                           alt={blog.title}
-                          className="w-full h-56 md:h-72 object-cover"
+                          className="w-full h-48 md:h-56 object-cover"
                         />
                       )}
-                      <div className="p-6 md:p-8">
+                      <div className="p-5 md:p-6 flex flex-col h-full">
                         <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-3">
                           {blog.publishedDate && (
                             <span className="inline-flex items-center gap-1">
@@ -116,7 +116,7 @@ export default function BlogsPage() {
                           <p className="text-slate-600 mb-2 line-clamp-2">{blog.excerpt}</p>
                         )}
 
-                        <p className="text-sm font-medium text-rockhill-pine mt-2">
+                        <div className="flex-grow"></div><p className="text-sm font-medium text-rockhill-pine mt-4">
                           Read full story &rarr;
                         </p>
                       </div>

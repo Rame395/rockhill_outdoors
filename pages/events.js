@@ -70,23 +70,23 @@ export default function EventsPage() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {events.map((event) => (
                   <Link
                     key={event.id}
                     href={`/events/${event.slug}`}
                     className="block group"
                   >
-                    <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group-hover:shadow-md transition-shadow">
+                    <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group-hover:shadow-md transition-shadow h-full flex flex-col">
                       {event.featuredImage && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={event.featuredImage}
                           alt={event.title}
-                          className="w-full h-56 md:h-72 object-cover"
+                          className="w-full h-48 md:h-56 object-cover"
                         />
                       )}
-                      <div className="p-6 md:p-8">
+                      <div className="p-5 md:p-6 flex flex-col h-full">
                         <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-3">
                           {event.eventDate && (
                             <span className="inline-flex items-center gap-1">
@@ -116,7 +116,7 @@ export default function EventsPage() {
                           <p className="text-slate-600 mb-2 line-clamp-2">{event.excerpt}</p>
                         )}
 
-                        <p className="text-sm font-medium text-rockhill-pine mt-2">
+                        <div className="flex-grow"></div><p className="text-sm font-medium text-rockhill-pine mt-4">
                           Read full story &rarr;
                         </p>
                       </div>
