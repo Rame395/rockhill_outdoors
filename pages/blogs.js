@@ -74,14 +74,14 @@ export default function BlogsPage() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
                 {blogs.map((blog) => (
                   <Link
                     key={blog.id}
                     href={`/blogs/${blog.slug}`}
                     className="block group"
                   >
-                    <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group-hover:shadow-md transition-shadow h-full flex flex-col">
+                    <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group-hover:shadow-md transition-shadow">
                       {blog.featuredImage && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -90,7 +90,7 @@ export default function BlogsPage() {
                           className="w-full h-56 md:h-64 object-cover"
                         />
                       )}
-                      <div className="p-5 md:p-6 flex flex-col h-full">
+                      <div className="p-5 md:p-6">
                         <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-3">
                           {blog.publishedDate && (
                             <span className="inline-flex items-center gap-1">
@@ -120,7 +120,7 @@ export default function BlogsPage() {
                           <p className="text-slate-600 mb-2 line-clamp-2">{blog.excerpt}</p>
                         )}
 
-                        <div className="flex-grow"></div><p className="text-sm font-medium text-rockhill-pine mt-4">
+                        <p className="text-sm font-medium text-rockhill-pine mt-4">
                           Read full story &rarr;
                         </p>
                       </div>
