@@ -70,7 +70,7 @@ export default function BlogsPage() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {blogs.map((blog) => (
                   <Link
                     key={blog.id}
@@ -83,7 +83,7 @@ export default function BlogsPage() {
                         <img
                           src={blog.featuredImage}
                           alt={blog.title}
-                          className="w-full h-48 md:h-56 object-cover"
+                          className="w-full h-56 md:h-64 object-cover"
                         />
                       )}
                       <div className="p-5 md:p-6 flex flex-col h-full">
