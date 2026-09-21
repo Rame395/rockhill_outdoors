@@ -204,7 +204,7 @@ export default function Maps() {
               <span className="text-sm font-medium">Find Us in Kathmandu</span>
             </div>
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Our <span className="text-slate-200">Locations</span>
+              Our <span className="text-rockhill-sunset">Locations</span>
             </h1>
             <p className="text-xl opacity-95 max-w-2xl mx-auto font-light">
               Discover where our learning programs and lifestyle adventures begin in the heart of Nepal.

@@ -50,8 +50,8 @@ export default function GalleryPage() {
               Photo Gallery
             </p>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Our Gallery
-            </h1>
+              Our <span className="text-rockhill-sunset">Gallery</span>
+              </h1>
             <p className="text-lg md:text-xl max-w-2xl text-slate-50">
               Explore moments from our outdoor adventures, learning programs, and community events.
             </p>

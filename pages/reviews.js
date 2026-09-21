@@ -106,8 +106,8 @@ export default function ReviewsPage() {
           <HeroBackground />
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Reviews & Testimonials
-            </h1>
+              Reviews & <span className="text-rockhill-sunset">Testimonials</span>
+              </h1>
             <p className="text-lg md:text-xl max-w-2xl text-slate-50">
               See what others are saying about their experiences with Rockhill Outdoors.
             </p>

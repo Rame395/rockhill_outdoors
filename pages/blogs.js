@@ -52,8 +52,8 @@ export default function BlogsPage() {
               Latest stories & insights
             </p>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Journal & Stories from the Outdoors
-            </h1>
+              Journal & <span className="text-rockhill-sunset">Stories</span>
+              </h1>
             <p className="text-lg md:text-xl max-w-2xl text-slate-50">
               Read about our latest trips, learning programs, and community adventures—written like
               blog posts, crafted from the trail.

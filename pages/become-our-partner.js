@@ -134,7 +134,7 @@ export default function BecomeOurPartner() {
           </div>
           
           <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in-up stagger-1">
-            Become Our <span className="text-slate-200">Partner</span>
+            Become Our <span className="text-rockhill-sunset">Partner</span>
           </h1>
           
           <p className="text-xl opacity-95 max-w-2xl font-light leading-relaxed animate-fade-in-up stagger-2">

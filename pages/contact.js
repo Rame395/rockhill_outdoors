@@ -148,7 +148,7 @@ export default function Contact() {
           </div>
 
           <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in-up stagger-1">
-            Get In <span className="text-slate-200">Touch</span>
+            Get In <span className="text-rockhill-sunset">Touch</span>
           </h1>
 
           <p className="text-xl opacity-95 max-w-2xl font-light leading-relaxed animate-fade-in-up stagger-2">

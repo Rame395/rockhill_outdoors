@@ -218,45 +218,23 @@ export default function Learning() {
       `}</style>
 
       {/* Hero Section */}
-      <section className="relative py-24 bg-gradient-to-br from-slate-50 via-slate-50/40 to-slate-50 border-b border-slate-100/60 overflow-hidden">
-        {/* Background blobs */}
-        <div className="blob" style={{
-          top: '10%',
-          left: '5%',
-          width: '400px',
-          height: '400px',
-          background: '#6ee7b7'
-        }}></div>
-        <div className="blob" style={{
-          bottom: '10%',
-          right: '5%',
-          width: '350px',
-          height: '350px',
-          background: '#a7f3d0'
-        }}></div>
-
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `radial-gradient(circle, #142E2B 1px, transparent 1px)`,
-          backgroundSize: '40px 40px'
-        }}></div>
-
-        <HeroBackground />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100/80 backdrop-blur-sm rounded-full text-rockhill-pine-dark font-medium text-sm mb-6 animate-fade-in-up">
-            <Sparkles className="w-4 h-4" />
-            <span>Expert-Led Training Programs</span>
+        <section className="relative overflow-hidden py-16 md:py-20 bg-gradient-to-br from-rockhill-pine via-rockhill-pine to-rockhill-pine-dark text-white">
+          <HeroBackground />
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-medium mb-4">
+              <Sparkles className="w-4 h-4" />
+              <span>Expert-Led Training Programs</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Learn Essential <span className="text-rockhill-sunset">Skills</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl max-w-2xl text-slate-50">
+              Master the knowledge and techniques that will make you a confident, capable outdoor adventurer. Our expert-led courses cover everything from navigation to expedition planning.
+            </p>
           </div>
-          
-          <h1 className="text-6xl md:text-7xl font-bold text-slate-900 mb-6 animate-fade-in-up stagger-1">
-            Learn Essential <span className="gradient-text">Skills</span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl font-light leading-relaxed animate-fade-in-up stagger-2">
-            Master the knowledge and techniques that will make you a confident, capable outdoor adventurer. Our expert-led courses cover everything from navigation to expedition planning.
-          </p>
-        </div>
-      </section>
+        </section>
 
       {/* Learning Categories */}
       <section className="py-24 bg-gradient-to-b from-slate-50/60 to-white relative overflow-hidden">
