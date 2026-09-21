@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { Star, Send } from 'lucide-react'
+import HeroBackground from '../components/HeroBackground'
 
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState([])
@@ -101,8 +102,9 @@ export default function ReviewsPage() {
 
       <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
         {/* Hero */}
-        <section className="py-16 md:py-20 bg-gradient-to-br from-rockhill-pine via-rockhill-pine to-rockhill-pine-dark text-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden py-16 md:py-20 bg-gradient-to-br from-rockhill-pine via-rockhill-pine to-rockhill-pine-dark text-white">
+          <HeroBackground />
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Reviews & Testimonials
             </h1>

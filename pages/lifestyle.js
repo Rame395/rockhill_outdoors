@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { CheckCircle, AlertCircle, Globe, Users, Sparkles, ArrowRight, Compass, MapPin } from 'lucide-react'
 import { lifestyleCategories } from '../lib/categories'
+import HeroBackground from '../components/HeroBackground'
 
 export default function Lifestyle() {
   const [formData, setFormData] = useState({
@@ -258,7 +259,8 @@ export default function Lifestyle() {
           backgroundSize: '40px 40px'
         }}></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <HeroBackground />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100/80 backdrop-blur-sm rounded-full text-rockhill-pine-dark font-medium text-sm mb-6 animate-fade-in-up">
             <Sparkles className="w-4 h-4" />
             <span>Curated Adventure Experiences</span>

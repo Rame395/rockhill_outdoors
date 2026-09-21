@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { MapPin, BookOpen, Globe2 } from 'lucide-react'
+import HeroBackground from '../components/HeroBackground'
 
 export default function Maps() {
   const [activeTab, setActiveTab] = useState('learning')
@@ -196,7 +197,7 @@ export default function Maps() {
 
       <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
         {/* Header */}
-        <section className="py-20 bg-gradient-to-br from-rockhill-pine via-rockhill-pine to-rockhill-pine-dark text-white">
+        <section className="relative overflow-hidden py-20 bg-gradient-to-br from-rockhill-pine via-rockhill-pine to-rockhill-pine-dark text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full">
               <MapPin className="w-4 h-4" />
@@ -213,7 +214,8 @@ export default function Maps() {
 
         {/* Maps Section */}
         <section className="py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <HeroBackground />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             {/* Tab Navigation */}
             <div className="flex justify-center mb-12">
               <div className="inline-flex gap-4 p-2 bg-slate-100 rounded-2xl">

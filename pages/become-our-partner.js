@@ -3,6 +3,7 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import { Building2, Handshake, Sparkles, ArrowRight, CheckCircle, AlertCircle, Globe2, Users } from 'lucide-react'
+import HeroBackground from '../components/HeroBackground'
 
 export default function BecomeOurPartner() {
   const [formData, setFormData] = useState({
@@ -125,7 +126,8 @@ export default function BecomeOurPartner() {
 
       {/* Hero Section */}
       <section className="relative py-24 bg-gradient-to-br from-rockhill-pine via-rockhill-pine to-rockhill-pine-dark text-white overflow-hidden text-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center">
+        <HeroBackground />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium text-sm mb-6 animate-fade-in-up">
             <Sparkles className="w-4 h-4" />
             <span>Partnerships &amp; Collaborations</span>

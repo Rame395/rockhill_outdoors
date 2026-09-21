@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ArrowLeft, ArrowRight, CheckCircle, Globe2, MapPin, Target, Compass, Megaphone } from 'lucide-react'
 import { lifestyleCategories } from '../../lib/categories'
+import HeroBackground from '../../components/HeroBackground'
 
 export default function LifestyleCategoryPage() {
   const router = useRouter()
@@ -76,13 +77,7 @@ export default function LifestyleCategoryPage() {
       
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-rockhill-pine via-rockhill-pine to-rockhill-pine-dark text-white overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `radial-gradient(circle, #ffffff 1px, transparent 1px)`,
-            backgroundSize: '40px 40px'
-          }}
-        />
+        <HeroBackground />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Link

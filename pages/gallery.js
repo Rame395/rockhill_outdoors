@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { Image as ImageIcon, Loader2 } from 'lucide-react'
+import HeroBackground from '../components/HeroBackground'
 
 export default function GalleryPage() {
   const [images, setImages] = useState([])
@@ -41,8 +42,9 @@ export default function GalleryPage() {
 
       <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
         {/* Hero */}
-        <section className="py-16 md:py-20 bg-gradient-to-br from-rockhill-pine via-rockhill-pine to-rockhill-pine-dark text-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden py-16 md:py-20 bg-gradient-to-br from-rockhill-pine via-rockhill-pine to-rockhill-pine-dark text-white">
+          <HeroBackground />
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-medium mb-4">
               <ImageIcon className="w-4 h-4" />
               Photo Gallery
