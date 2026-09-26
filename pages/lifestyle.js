@@ -308,14 +308,16 @@ export default function Lifestyle() {
                   )}
 
                   <div className="relative z-10 p-7 flex flex-col flex-grow">
-                    {category.icon_name && (
-                      <div className="w-14 h-14 mb-5 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-2xl shrink-0">
-                        <span><DynamicIcon name={category.icon_name} className="w-7 h-7 text-rockhill-sunset" /></span>
-                      </div>
-                    )}
-                    <h3 className="text-xl font-semibold text-slate-900 mb-3 group-hover:text-rockhill-pine transition-colors">
-                      {category.name}
-                    </h3>
+                    <div className="flex items-center gap-4 mb-4">
+                      {category.icon_name && (
+                        <div className="w-14 h-14 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-2xl shrink-0">
+                          <span><DynamicIcon name={category.icon_name} className="w-7 h-7 text-rockhill-sunset" /></span>
+                        </div>
+                      )}
+                      <h3 className="text-xl font-semibold text-slate-900 group-hover:text-rockhill-pine transition-colors">
+                        {category.name}
+                      </h3>
+                    </div>
                     <p className="text-sm text-slate-600 leading-relaxed mb-4 flex-grow">
                       {category.description}
                     </p>
