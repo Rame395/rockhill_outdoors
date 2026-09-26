@@ -190,7 +190,8 @@ export default function EventDetailPage() {
                 </article>
 
                 {/* Enquiry form */}
-                <aside className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-7">
+                <aside className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-7 sticky top-24 self-start">
+
                   <h2 className="text-xl font-semibold text-slate-900 mb-2">
                     Enquire about this event
                   </h2>

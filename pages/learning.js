@@ -2,12 +2,31 @@
 
 import Head from 'next/head'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CheckCircle, AlertCircle, Award, Users, Target, Sparkles, ArrowRight, GraduationCap } from 'lucide-react'
-import { learningCategories } from '../lib/categories'
+import { DynamicIcon } from '../lib/icon-mapper'
 import HeroBackground from '../components/HeroBackground'
 
 export default function Learning() {
+  const [learningCategories, setLearningCategories] = useState([])
+  const [loadingCategories, setLoadingCategories] = useState(true)
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch('/api/learning-categories')
+        if (res.ok) {
+          setLearningCategories(await res.json())
+        }
+      } catch (error) {
+        console.error('Error fetching learning categories:', error)
+      } finally {
+        setLoadingCategories(false)
+      }
+    }
+    fetchCategories()
+  }, [])
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -263,9 +282,9 @@ export default function Learning() {
                 <div className="group bg-white border border-slate-200 rounded-3xl p-7 shadow-sm hover:shadow-2xl hover:border-rockhill-pine transition-all hover:-translate-y-1 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-rockhill-pine/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10">
-                    {category.icon && (
+                    {category.icon_name && (
                       <div className="w-14 h-14 mb-5 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-2xl">
-                        <span>{category.icon}</span>
+                        <span><DynamicIcon name={category.icon_name} className="w-7 h-7 text-rockhill-sunset" /></span>
                       </div>
                     )}
                     <h3 className="text-xl font-semibold text-slate-900 mb-3 group-hover:text-rockhill-pine transition-colors">

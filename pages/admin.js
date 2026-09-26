@@ -106,6 +106,24 @@ export default function AdminDashboard() {
     enabled: true
   })
 
+  // Categories State
+  const [learningCategories, setLearningCategories] = useState([])
+  const [learningCategoriesLoading, setLearningCategoriesLoading] = useState(false)
+  const [lifestyleCategories, setLifestyleCategories] = useState([])
+  const [lifestyleCategoriesLoading, setLifestyleCategoriesLoading] = useState(false)
+  
+  const [showCategoryForm, setShowCategoryForm] = useState(false)
+  const [editingCategoryType, setEditingCategoryType] = useState(null) // 'learning' or 'lifestyle'
+  const [editingCategoryId, setEditingCategoryId] = useState(null)
+  const [categorySaving, setCategorySaving] = useState(false)
+  const [categoryForm, setCategoryForm] = useState({
+    slug: '',
+    name: '',
+    description: '',
+    icon_name: 'HelpCircle',
+    sort_order: 0,
+    enabled: true
+  })
 
   // Simple authentication (in production, use proper auth)
   const handleLogin = (e) => {
@@ -125,7 +143,8 @@ export default function AdminDashboard() {
       loadGallery()
       loadSiteSettings()
       loadOfficeLocations()
-
+      loadLearningCategories()
+      loadLifestyleCategories()
     } else {
       alert('Incorrect password')
       setPassword('')
@@ -509,6 +528,108 @@ export default function AdminDashboard() {
     }
   }
 
+  // --- Categories (Learning & Lifestyle) ---
+  const loadLearningCategories = async () => {
+    setLearningCategoriesLoading(true)
+    try {
+      const res = await fetch('/api/learning-categories')
+      if (res.ok) {
+        const data = await res.json()
+        setLearningCategories(data || [])
+      }
+    } catch (error) {
+      console.error('Error loading learning categories:', error)
+    }
+    setLearningCategoriesLoading(false)
+  }
+
+  const loadLifestyleCategories = async () => {
+    setLifestyleCategoriesLoading(true)
+    try {
+      const res = await fetch('/api/lifestyle-categories')
+      if (res.ok) {
+        const data = await res.json()
+        setLifestyleCategories(data || [])
+      }
+    } catch (error) {
+      console.error('Error loading lifestyle categories:', error)
+    }
+    setLifestyleCategoriesLoading(false)
+  }
+
+  const resetCategoryForm = () => {
+    setCategoryForm({ slug: '', name: '', description: '', icon_name: 'HelpCircle', sort_order: 0, enabled: true })
+    setEditingCategoryId(null)
+    setEditingCategoryType(null)
+    setShowCategoryForm(false)
+  }
+
+  const startEditCategory = (cat, type) => {
+    setCategoryForm({
+      slug: cat.slug,
+      name: cat.name,
+      description: cat.description || '',
+      icon_name: cat.icon_name || 'HelpCircle',
+      sort_order: cat.sort_order || 0,
+      enabled: cat.enabled !== false
+    })
+    setEditingCategoryId(cat.id)
+    setEditingCategoryType(type)
+    setShowCategoryForm(true)
+  }
+
+  const startCreateCategory = (type) => {
+    resetCategoryForm()
+    setEditingCategoryType(type)
+    setShowCategoryForm(true)
+  }
+
+  const saveCategory = async (e) => {
+    e.preventDefault()
+    setCategorySaving(true)
+    try {
+      const endpoint = editingCategoryType === 'learning' ? '/api/learning-categories' : '/api/lifestyle-categories'
+      const url = editingCategoryId ? `${endpoint}/${editingCategoryId}` : endpoint
+      const method = editingCategoryId ? 'PUT' : 'POST'
+      
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(categoryForm)
+      })
+      if (res.ok) {
+        if (editingCategoryType === 'learning') {
+          await loadLearningCategories()
+        } else {
+          await loadLifestyleCategories()
+        }
+        resetCategoryForm()
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to save category')
+      }
+    } catch (error) {
+      console.error('Error saving category:', error)
+      alert('Error saving category')
+    }
+    setCategorySaving(false)
+  }
+
+  const deleteCategory = async (id, type) => {
+    if (!confirm(`Delete this ${type} category?`)) return
+    try {
+      const endpoint = type === 'learning' ? '/api/learning-categories' : '/api/lifestyle-categories'
+      const res = await fetch(`${endpoint}/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        if (type === 'learning') await loadLearningCategories()
+        else await loadLifestyleCategories()
+      } else {
+        alert('Failed to delete category')
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error)
+    }
+  }
 
 
   const handleGalleryUpload = async (e) => {
@@ -1249,7 +1370,269 @@ export default function AdminDashboard() {
             )}
           </div>
 
+
+          {/* Learning Categories Management */}
+          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Learning Categories</h2>
+                <p className="text-sm text-gray-600">Manage categories shown in the Learning dropdown and page.</p>
+              </div>
+              <button
+                onClick={() => startCreateCategory('learning')}
+                className="flex items-center gap-2 px-3 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
+              >
+                <Plus size={16} /> Add Category
+              </button>
+            </div>
+
+            {showCategoryForm && editingCategoryType === 'learning' && (
+              <form onSubmit={saveCategory} className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-4">
+                <h3 className="font-semibold text-gray-900">{editingCategoryId ? 'Edit Category' : 'New Category'}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Name *</label>
+                    <input
+                      type="text"
+                      required
+                      value={categoryForm.name}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Slug *</label>
+                    <input
+                      type="text"
+                      required
+                      value={categoryForm.slug}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, slug: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                  <textarea
+                    rows={2}
+                    value={categoryForm.description}
+                    onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Icon Name *</label>
+                    <select
+                      value={categoryForm.icon_name}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, icon_name: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    >
+                      <option value="Brain">Brain</option>
+                      <option value="MessageSquare">MessageSquare</option>
+                      <option value="Compass">Compass</option>
+                      <option value="BarChart">BarChart</option>
+                      <option value="Sparkles">Sparkles</option>
+                      <option value="Palette">Palette</option>
+                      <option value="Dribbble">Dribbble</option>
+                      <option value="Mountain">Mountain</option>
+                      <option value="Plane">Plane</option>
+                      <option value="Trophy">Trophy</option>
+                      <option value="HelpCircle">HelpCircle</option>
+                      <option value="Star">Star</option>
+                      <option value="Heart">Heart</option>
+                      <option value="Map">Map</option>
+                      <option value="Activity">Activity</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Sort Order</label>
+                    <input
+                      type="number"
+                      value={categoryForm.sort_order}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, sort_order: parseInt(e.target.value) || 0 })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    />
+                  </div>
+                  <div className="pb-2">
+                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                      <input
+                        type="checkbox"
+                        checked={categoryForm.enabled}
+                        onChange={(e) => setCategoryForm({ ...categoryForm, enabled: e.target.checked })}
+                        className="h-4 w-4 text-emerald-600 border-gray-300 rounded"
+                      />
+                      Visible on site
+                    </label>
+                  </div>
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button type="submit" disabled={categorySaving} className="px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-60">
+                    {categorySaving ? 'Saving...' : 'Save Category'}
+                  </button>
+                  <button type="button" onClick={resetCategoryForm} className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-200">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {learningCategoriesLoading ? (
+              <p className="text-sm text-gray-500">Loading categories...</p>
+            ) : (
+              <div className="space-y-3">
+                {learningCategories.map((cat) => (
+                  <div key={cat.id} className="flex items-start justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <div>
+                      <p className="font-semibold text-gray-900 flex items-center gap-2">
+                        {cat.name}
+                        {!cat.enabled && <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">Hidden</span>}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Slug: {cat.slug} | Icon: {cat.icon_name} | Order: {cat.sort_order}</p>
+                      {cat.description && <p className="text-sm text-gray-600 mt-1">{cat.description}</p>}
+                    </div>
+                    <div className="flex gap-2 shrink-0 ml-4">
+                      <button onClick={() => startEditCategory(cat, 'learning')} className="px-3 py-1 text-xs bg-blue-50 text-blue-700 font-medium rounded-lg hover:bg-blue-100">Edit</button>
+                      <button onClick={() => deleteCategory(cat.id, 'learning')} className="px-3 py-1 text-xs bg-red-50 text-red-700 font-medium rounded-lg hover:bg-red-100">Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Lifestyle Categories Management */}
+          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Lifestyle Categories</h2>
+                <p className="text-sm text-gray-600">Manage categories shown in the Lifestyle dropdown and page.</p>
+              </div>
+              <button
+                onClick={() => startCreateCategory('lifestyle')}
+                className="flex items-center gap-2 px-3 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
+              >
+                <Plus size={16} /> Add Category
+              </button>
+            </div>
+
+            {showCategoryForm && editingCategoryType === 'lifestyle' && (
+              <form onSubmit={saveCategory} className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-4">
+                <h3 className="font-semibold text-gray-900">{editingCategoryId ? 'Edit Category' : 'New Category'}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Name *</label>
+                    <input
+                      type="text"
+                      required
+                      value={categoryForm.name}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Slug *</label>
+                    <input
+                      type="text"
+                      required
+                      value={categoryForm.slug}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, slug: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                  <textarea
+                    rows={2}
+                    value={categoryForm.description}
+                    onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Icon Name *</label>
+                    <select
+                      value={categoryForm.icon_name}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, icon_name: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    >
+                      <option value="Brain">Brain</option>
+                      <option value="MessageSquare">MessageSquare</option>
+                      <option value="Compass">Compass</option>
+                      <option value="BarChart">BarChart</option>
+                      <option value="Sparkles">Sparkles</option>
+                      <option value="Palette">Palette</option>
+                      <option value="Dribbble">Dribbble</option>
+                      <option value="Mountain">Mountain</option>
+                      <option value="Plane">Plane</option>
+                      <option value="Trophy">Trophy</option>
+                      <option value="HelpCircle">HelpCircle</option>
+                      <option value="Star">Star</option>
+                      <option value="Heart">Heart</option>
+                      <option value="Map">Map</option>
+                      <option value="Activity">Activity</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Sort Order</label>
+                    <input
+                      type="number"
+                      value={categoryForm.sort_order}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, sort_order: parseInt(e.target.value) || 0 })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    />
+                  </div>
+                  <div className="pb-2">
+                    <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                      <input
+                        type="checkbox"
+                        checked={categoryForm.enabled}
+                        onChange={(e) => setCategoryForm({ ...categoryForm, enabled: e.target.checked })}
+                        className="h-4 w-4 text-emerald-600 border-gray-300 rounded"
+                      />
+                      Visible on site
+                    </label>
+                  </div>
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button type="submit" disabled={categorySaving} className="px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-60">
+                    {categorySaving ? 'Saving...' : 'Save Category'}
+                  </button>
+                  <button type="button" onClick={resetCategoryForm} className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-200">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {lifestyleCategoriesLoading ? (
+              <p className="text-sm text-gray-500">Loading categories...</p>
+            ) : (
+              <div className="space-y-3">
+                {lifestyleCategories.map((cat) => (
+                  <div key={cat.id} className="flex items-start justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <div>
+                      <p className="font-semibold text-gray-900 flex items-center gap-2">
+                        {cat.name}
+                        {!cat.enabled && <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">Hidden</span>}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Slug: {cat.slug} | Icon: {cat.icon_name} | Order: {cat.sort_order}</p>
+                      {cat.description && <p className="text-sm text-gray-600 mt-1">{cat.description}</p>}
+                    </div>
+                    <div className="flex gap-2 shrink-0 ml-4">
+                      <button onClick={() => startEditCategory(cat, 'lifestyle')} className="px-3 py-1 text-xs bg-blue-50 text-blue-700 font-medium rounded-lg hover:bg-blue-100">Edit</button>
+                      <button onClick={() => deleteCategory(cat.id, 'lifestyle')} className="px-3 py-1 text-xs bg-red-50 text-red-700 font-medium rounded-lg hover:bg-red-100">Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Hero Slides Management */}
+
           <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
 
             <div className="flex items-center justify-between mb-4">

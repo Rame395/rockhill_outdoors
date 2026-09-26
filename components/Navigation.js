@@ -4,16 +4,35 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react'
 import { learningCategories, lifestyleCategories } from '../lib/categories'
+import { DynamicIcon } from '../lib/icon-mapper'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [openMobileDropdown, setOpenMobileDropdown] = useState(null)
   const [isClient, setIsClient] = useState(false)
+  const [learningCategories, setLearningCategories] = useState([])
+  const [lifestyleCategories, setLifestyleCategories] = useState([])
+  
   const router = useRouter()
   const pathname = router.pathname
 
   useEffect(() => {
     setIsClient(true)
+    
+    // Fetch categories dynamically
+    const fetchCategories = async () => {
+      try {
+        const [learningRes, lifestyleRes] = await Promise.all([
+          fetch('/api/learning-categories'),
+          fetch('/api/lifestyle-categories')
+        ])
+        if (learningRes.ok) setLearningCategories(await learningRes.json())
+        if (lifestyleRes.ok) setLifestyleCategories(await lifestyleRes.json())
+      } catch (err) {
+        console.error('Error loading navigation categories:', err)
+      }
+    }
+    fetchCategories()
   }, [])
 
   const toggleMobileDropdown = (name) => {
@@ -76,7 +95,9 @@ export default function Navigation() {
                   {learningCategories.map((category) => (
                     <Link key={category.slug} href={`/learning/${category.slug}`} className="group/item flex items-start gap-3 px-3 py-2.5 hover:bg-slate-50 transition-colors rounded-xl">
                       <div className="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-slate-100 rounded-lg group-hover/item:bg-white border border-transparent transition-all">
-                        <div className="scale-75 origin-center">{category.icon}</div>
+                        <div className="scale-75 origin-center">
+                          <DynamicIcon name={category.icon_name} className="w-7 h-7 text-rockhill-sunset" />
+                        </div>
                       </div>
                       <div className="pt-0.5">
                         <div className="text-sm font-bold text-slate-700 group-hover/item:text-rockhill-pine">{category.name}</div>
@@ -105,7 +126,9 @@ export default function Navigation() {
                   {lifestyleCategories.map((category) => (
                     <Link key={category.slug} href={`/lifestyle/${category.slug}`} className="group/item flex items-start gap-3 px-3 py-2.5 hover:bg-slate-50 transition-colors rounded-xl">
                       <div className="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-slate-100 rounded-lg group-hover/item:bg-white border border-transparent transition-all">
-                        <div className="scale-75 origin-center">{category.icon}</div>
+                        <div className="scale-75 origin-center">
+                          <DynamicIcon name={category.icon_name} className="w-7 h-7 text-rockhill-sunset" />
+                        </div>
                       </div>
                       <div className="pt-0.5">
                         <div className="text-sm font-bold text-slate-700 group-hover/item:text-rockhill-pine">{category.name}</div>
