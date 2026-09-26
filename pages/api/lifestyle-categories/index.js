@@ -17,12 +17,12 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      const { slug, name, description, icon_name, sort_order, enabled } = req.body;
+      const { slug, name, description, icon_name, sort_order, enabled, image_url } = req.body;
       if (!name || !slug) return res.status(400).json({ error: 'Name and slug are required' });
 
       const [result] = await pool.query(
-        'INSERT INTO lifestyle_categories (slug, name, description, icon_name, sort_order, enabled) VALUES (?, ?, ?, ?, ?, ?)',
-        [slug, name, description || '', icon_name || 'HelpCircle', sort_order || 0, enabled !== false]
+        'INSERT INTO lifestyle_categories (slug, name, description, icon_name, sort_order, enabled, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [slug, name, description || '', icon_name || 'HelpCircle', sort_order || 0, enabled !== false, image_url || null]
       );
       const [rows] = await pool.query('SELECT * FROM lifestyle_categories WHERE id = ?', [result.insertId]);
       return res.status(201).json(rows[0]);

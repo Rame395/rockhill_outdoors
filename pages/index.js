@@ -3,10 +3,13 @@ import Link from 'next/link'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Mountain, Compass, ArrowRight, Sparkles, BookOpen, Globe2, ChevronLeft, ChevronRight } from 'lucide-react'
 import useEmblaCarousel from 'embla-carousel-react'
-import { learningCategories, lifestyleCategories } from '../lib/categories'
+import { DynamicIcon } from '../lib/icon-mapper'
 
 export default function Home() {
   const [heroSlides, setHeroSlides] = useState([])
+  const [learningCategories, setLearningCategories] = useState([])
+  const [lifestyleCategories, setLifestyleCategories] = useState([])
+  
   const [selectedIndex, setSelectedIndex] = useState(0)
   const videoRefs = useRef([])
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 45 })
@@ -23,7 +26,22 @@ export default function Home() {
         console.error('Failed to fetch slides:', error)
       }
     }
+    
+    const fetchCategories = async () => {
+      try {
+        const [learningRes, lifestyleRes] = await Promise.all([
+          fetch('/api/learning-categories'),
+          fetch('/api/lifestyle-categories')
+        ])
+        if (learningRes.ok) setLearningCategories(await learningRes.json())
+        if (lifestyleRes.ok) setLifestyleCategories(await lifestyleRes.json())
+      } catch (error) {
+        console.error('Failed to fetch categories:', error)
+      }
+    }
+    
     fetchSlides()
+    fetchCategories()
   }, [])
 
   // Track active slide
@@ -389,21 +407,29 @@ export default function Home() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
                 {learningCategories.map((category) => (
                   <Link key={category.slug} href={`/learning/${category.slug}`}>
-                    <div className="group p-7 bg-white border border-slate-200 rounded-3xl hover:border-rockhill-pine hover:shadow-2xl card-hover h-full relative overflow-hidden">
+                    <div className="group bg-white border border-slate-200 rounded-3xl hover:border-rockhill-pine hover:shadow-2xl card-hover h-full relative overflow-hidden flex flex-col">
                       <div className="absolute inset-0 bg-gradient-to-br from-rockhill-pine/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="relative z-10">
-                        {category.icon && (
-                          <div className="w-14 h-14 mb-5 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-2xl">
-                            <span>{category.icon}</span>
+                      
+                      {category.image_url && (
+                        <div className="w-full h-48 relative overflow-hidden">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={category.image_url} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        </div>
+                      )}
+
+                      <div className="relative z-10 p-7 flex flex-col flex-grow">
+                        {category.icon_name && (
+                          <div className="w-14 h-14 mb-5 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-2xl shrink-0">
+                            <span><DynamicIcon name={category.icon_name} className="w-7 h-7 text-rockhill-sunset" /></span>
                           </div>
                         )}
                         <h4 className="text-xl font-semibold text-slate-900 mb-3 group-hover:text-rockhill-pine transition-colors">
                           {category.name}
                         </h4>
-                        <p className="text-sm text-slate-600 leading-relaxed">
+                        <p className="text-sm text-slate-600 leading-relaxed flex-grow">
                           {category.description}
                         </p>
-                        <div className="mt-4 inline-flex items-center text-rockhill-pine font-semibold text-sm">
+                        <div className="mt-4 inline-flex items-center text-rockhill-pine font-semibold text-sm shrink-0">
                           View learning focus
                           <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
@@ -431,21 +457,29 @@ export default function Home() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
                 {lifestyleCategories.map((category) => (
                   <Link key={category.slug} href={`/lifestyle/${category.slug}`}>
-                    <div className="group p-7 bg-white border border-slate-200 rounded-3xl hover:border-rockhill-pine hover:shadow-2xl card-hover h-full relative overflow-hidden">
+                    <div className="group bg-white border border-slate-200 rounded-3xl hover:border-rockhill-pine hover:shadow-2xl card-hover h-full relative overflow-hidden flex flex-col">
                       <div className="absolute inset-0 bg-gradient-to-br from-rockhill-pine/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="relative z-10">
-                        {category.icon && (
-                          <div className="w-14 h-14 mb-5 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-2xl">
-                            <span>{category.icon}</span>
+                      
+                      {category.image_url && (
+                        <div className="w-full h-48 relative overflow-hidden">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={category.image_url} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        </div>
+                      )}
+
+                      <div className="relative z-10 p-7 flex flex-col flex-grow">
+                        {category.icon_name && (
+                          <div className="w-14 h-14 mb-5 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-2xl shrink-0">
+                            <span><DynamicIcon name={category.icon_name} className="w-7 h-7 text-rockhill-sunset" /></span>
                           </div>
                         )}
                         <h4 className="text-xl font-semibold text-slate-900 mb-3 group-hover:text-rockhill-pine transition-colors">
                           {category.name}
                         </h4>
-                        <p className="text-sm text-slate-600 leading-relaxed">
+                        <p className="text-sm text-slate-600 leading-relaxed flex-grow">
                           {category.description}
                         </p>
-                        <div className="mt-4 inline-flex items-center text-rockhill-pine font-semibold text-sm">
+                        <div className="mt-4 inline-flex items-center text-rockhill-pine font-semibold text-sm shrink-0">
                           View lifestyle trips
                           <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>

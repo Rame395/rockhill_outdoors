@@ -122,7 +122,8 @@ export default function AdminDashboard() {
     description: '',
     icon_name: 'HelpCircle',
     sort_order: 0,
-    enabled: true
+    enabled: true,
+    image_url: ''
   })
 
   // Simple authentication (in production, use proper auth)
@@ -558,7 +559,7 @@ export default function AdminDashboard() {
   }
 
   const resetCategoryForm = () => {
-    setCategoryForm({ slug: '', name: '', description: '', icon_name: 'HelpCircle', sort_order: 0, enabled: true })
+    setCategoryForm({ slug: '', name: '', description: '', icon_name: 'HelpCircle', sort_order: 0, enabled: true, image_url: '' })
     setEditingCategoryId(null)
     setEditingCategoryType(null)
     setShowCategoryForm(false)
@@ -571,7 +572,8 @@ export default function AdminDashboard() {
       description: cat.description || '',
       icon_name: cat.icon_name || 'HelpCircle',
       sort_order: cat.sort_order || 0,
-      enabled: cat.enabled !== false
+      enabled: cat.enabled !== false,
+      image_url: cat.image_url || ''
     })
     setEditingCategoryId(cat.id)
     setEditingCategoryType(type)
@@ -611,6 +613,32 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Error saving category:', error)
       alert('Error saving category')
+    }
+    setCategorySaving(false)
+  }
+
+  const handleCategoryImageUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    setCategorySaving(true) // Reuse saving state for uploading
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const res = await fetch('/api/upload/category-image', {
+        method: 'POST',
+        body: formData
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setCategoryForm({ ...categoryForm, image_url: data.image_path || data.path })
+      } else {
+        alert(data.error || 'Upload failed')
+      }
+    } catch (error) {
+      console.error('Error uploading category image:', error)
+      alert('Upload failed')
     }
     setCategorySaving(false)
   }
@@ -1420,6 +1448,22 @@ export default function AdminDashboard() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Header Image (Optional)</label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleCategoryImageUpload}
+                      disabled={categorySaving}
+                      className="block w-full text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white cursor-pointer"
+                    />
+                    {categoryForm.image_url && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={categoryForm.image_url} alt="Preview" className="h-10 w-10 object-cover rounded" />
+                    )}
+                  </div>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1">Icon Name *</label>
@@ -1549,6 +1593,22 @@ export default function AdminDashboard() {
                     onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Header Image (Optional)</label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleCategoryImageUpload}
+                      disabled={categorySaving}
+                      className="block w-full text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white cursor-pointer"
+                    />
+                    {categoryForm.image_url && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={categoryForm.image_url} alt="Preview" className="h-10 w-10 object-cover rounded" />
+                    )}
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                   <div>

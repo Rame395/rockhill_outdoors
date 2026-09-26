@@ -10,12 +10,12 @@ export default async function handler(req, res) {
 
   if (req.method === 'PUT') {
     try {
-      const { slug, name, description, icon_name, sort_order, enabled } = req.body;
+      const { slug, name, description, icon_name, sort_order, enabled, image_url } = req.body;
       if (!name || !slug) return res.status(400).json({ error: 'Name and slug are required' });
 
       await pool.query(
-        'UPDATE learning_categories SET slug = ?, name = ?, description = ?, icon_name = ?, sort_order = ?, enabled = ? WHERE id = ?',
-        [slug, name, description || '', icon_name || 'HelpCircle', sort_order ?? 0, enabled !== false, id]
+        'UPDATE learning_categories SET slug = ?, name = ?, description = ?, icon_name = ?, sort_order = ?, enabled = ?, image_url = ? WHERE id = ?',
+        [slug, name, description || '', icon_name || 'HelpCircle', sort_order ?? 0, enabled !== false, image_url || null, id]
       );
       const [rows] = await pool.query('SELECT * FROM learning_categories WHERE id = ?', [id]);
       return res.status(200).json(rows[0]);

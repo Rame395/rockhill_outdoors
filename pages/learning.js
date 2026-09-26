@@ -279,21 +279,29 @@ export default function Learning() {
                 key={category.slug}
                 href={`/learning/${category.slug}`}
               >
-                <div className="group bg-white border border-slate-200 rounded-3xl p-7 shadow-sm hover:shadow-2xl hover:border-rockhill-pine transition-all hover:-translate-y-1 relative overflow-hidden">
+                <div className="group bg-white border border-slate-200 rounded-3xl hover:shadow-2xl hover:border-rockhill-pine transition-all hover:-translate-y-1 relative overflow-hidden flex flex-col h-full">
                   <div className="absolute inset-0 bg-gradient-to-br from-rockhill-pine/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="relative z-10">
+                  
+                  {category.image_url && (
+                    <div className="w-full h-48 relative overflow-hidden shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={category.image_url} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    </div>
+                  )}
+
+                  <div className="relative z-10 p-7 flex flex-col flex-grow">
                     {category.icon_name && (
-                      <div className="w-14 h-14 mb-5 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-2xl">
+                      <div className="w-14 h-14 mb-5 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-2xl shrink-0">
                         <span><DynamicIcon name={category.icon_name} className="w-7 h-7 text-rockhill-sunset" /></span>
                       </div>
                     )}
                     <h3 className="text-xl font-semibold text-slate-900 mb-3 group-hover:text-rockhill-pine transition-colors">
                     {category.name}
                     </h3>
-                    <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                    <p className="text-sm text-slate-600 leading-relaxed mb-4 flex-grow">
                       {category.description}
                     </p>
-                    <div className="inline-flex items-center gap-1 text-sm font-semibold text-rockhill-pine">
+                    <div className="inline-flex items-center gap-1 text-sm font-semibold text-rockhill-pine shrink-0">
                       Learn more
                       <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </div>
