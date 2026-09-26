@@ -83,6 +83,30 @@ export default function AdminDashboard() {
     enabled: true
   })
 
+  // Contact Info (Site Settings) State
+  const [siteSettings, setSiteSettings] = useState({
+    contact_email: '',
+    contact_phone: '',
+    contact_address: '',
+    contact_hours: ''
+  })
+  const [siteSettingsSaving, setSiteSettingsSaving] = useState(false)
+
+  // Office Locations State
+  const [officeLocations, setOfficeLocations] = useState([])
+  const [officeLocationsLoading, setOfficeLocationsLoading] = useState(false)
+  const [showLocationForm, setShowLocationForm] = useState(false)
+  const [editingLocationId, setEditingLocationId] = useState(null)
+  const [locationSaving, setLocationSaving] = useState(false)
+  const [locationForm, setLocationForm] = useState({
+    name: '',
+    description: '',
+    phone: '',
+    sort_order: 0,
+    enabled: true
+  })
+
+
   // Simple authentication (in production, use proper auth)
   const handleLogin = (e) => {
     e.preventDefault()
@@ -99,6 +123,9 @@ export default function AdminDashboard() {
       loadReviews()
       loadContactSubmissions()
       loadGallery()
+      loadSiteSettings()
+      loadOfficeLocations()
+
     } else {
       alert('Incorrect password')
       setPassword('')
@@ -372,6 +399,117 @@ export default function AdminDashboard() {
     }
     setGalleryLoading(false)
   }
+
+  // --- Site Settings (Contact Info) ---
+  const loadSiteSettings = async () => {
+    try {
+      const res = await fetch('/api/site-settings')
+      if (res.ok) {
+        const data = await res.json()
+        setSiteSettings({
+          contact_email: data.contact_email || '',
+          contact_phone: data.contact_phone || '',
+          contact_address: data.contact_address || '',
+          contact_hours: data.contact_hours || ''
+        })
+      }
+    } catch (error) {
+      console.error('Error loading site settings:', error)
+    }
+  }
+
+  const saveSiteSettings = async (e) => {
+    e.preventDefault()
+    setSiteSettingsSaving(true)
+    try {
+      const res = await fetch('/api/site-settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(siteSettings)
+      })
+      if (res.ok) {
+        alert('Contact info saved successfully!')
+      } else {
+        alert('Failed to save settings')
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error)
+      alert('Error saving settings')
+    }
+    setSiteSettingsSaving(false)
+  }
+
+  // --- Office Locations ---
+  const loadOfficeLocations = async () => {
+    setOfficeLocationsLoading(true)
+    try {
+      const res = await fetch('/api/office-locations')
+      if (res.ok) {
+        const data = await res.json()
+        setOfficeLocations(data || [])
+      }
+    } catch (error) {
+      console.error('Error loading locations:', error)
+    }
+    setOfficeLocationsLoading(false)
+  }
+
+  const resetLocationForm = () => {
+    setLocationForm({ name: '', description: '', phone: '', sort_order: 0, enabled: true })
+    setEditingLocationId(null)
+    setShowLocationForm(false)
+  }
+
+  const startEditLocation = (loc) => {
+    setLocationForm({
+      name: loc.name,
+      description: loc.description || '',
+      phone: loc.phone || '',
+      sort_order: loc.sort_order || 0,
+      enabled: loc.enabled !== false
+    })
+    setEditingLocationId(loc.id)
+    setShowLocationForm(true)
+  }
+
+  const saveLocation = async (e) => {
+    e.preventDefault()
+    setLocationSaving(true)
+    try {
+      const url = editingLocationId ? `/api/office-locations/${editingLocationId}` : '/api/office-locations'
+      const method = editingLocationId ? 'PUT' : 'POST'
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(locationForm)
+      })
+      if (res.ok) {
+        await loadOfficeLocations()
+        resetLocationForm()
+      } else {
+        alert('Failed to save location')
+      }
+    } catch (error) {
+      console.error('Error saving location:', error)
+    }
+    setLocationSaving(false)
+  }
+
+  const deleteLocation = async (id) => {
+    if (!confirm('Delete this location?')) return
+    try {
+      const res = await fetch(`/api/office-locations/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        await loadOfficeLocations()
+      } else {
+        alert('Failed to delete location')
+      }
+    } catch (error) {
+      console.error('Error deleting location:', error)
+    }
+  }
+
+
 
   const handleGalleryUpload = async (e) => {
     const file = e.target.files?.[0]
@@ -943,8 +1081,177 @@ export default function AdminDashboard() {
             </form>
           </div>
 
+          {/* Contact Info (Site Settings) */}
+          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">Contact Information</h2>
+              <p className="text-sm text-gray-600">Update the contact details shown on the Contact page (email, phone, address, hours).</p>
+            </div>
+            <form onSubmit={saveSiteSettings} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-1">Email</label>
+                  <input
+                    type="email"
+                    value={siteSettings.contact_email}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, contact_email: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                    placeholder="your@email.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-1">Phone</label>
+                  <input
+                    type="text"
+                    value={siteSettings.contact_phone}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, contact_phone: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                    placeholder="+977 970-4800736"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-1">Address</label>
+                  <input
+                    type="text"
+                    value={siteSettings.contact_address}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, contact_address: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                    placeholder="Kathmandu, Nepal"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-1">Business Hours</label>
+                  <input
+                    type="text"
+                    value={siteSettings.contact_hours}
+                    onChange={(e) => setSiteSettings({ ...siteSettings, contact_hours: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                    placeholder="5 AM to 8 PM throughout the week."
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={siteSettingsSaving}
+                className="px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-60"
+              >
+                {siteSettingsSaving ? 'Saving...' : 'Save Contact Info'}
+              </button>
+            </form>
+          </div>
+
+          {/* Office Locations */}
+          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Office Locations</h2>
+                <p className="text-sm text-gray-600">Manage the Additional Locations section on the Contact page.</p>
+              </div>
+              <button
+                onClick={() => { resetLocationForm(); setShowLocationForm(true); }}
+                className="flex items-center gap-2 px-3 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
+              >
+                <Plus size={16} /> Add Location
+              </button>
+            </div>
+
+            {showLocationForm && (
+              <form onSubmit={saveLocation} className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-4">
+                <h3 className="font-semibold text-gray-900">{editingLocationId ? 'Edit Location' : 'New Location'}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Location Name *</label>
+                    <input
+                      type="text"
+                      required
+                      value={locationForm.name}
+                      onChange={(e) => setLocationForm({ ...locationForm, name: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                      placeholder="e.g. Dharan, Sunsari"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Phone</label>
+                    <input
+                      type="text"
+                      value={locationForm.phone}
+                      onChange={(e) => setLocationForm({ ...locationForm, phone: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                      placeholder="+977 9704800736"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                  <textarea
+                    rows={2}
+                    value={locationForm.description}
+                    onChange={(e) => setLocationForm({ ...locationForm, description: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    placeholder="Short description of this office..."
+                  />
+                </div>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Sort Order</label>
+                    <input
+                      type="number"
+                      value={locationForm.sort_order}
+                      onChange={(e) => setLocationForm({ ...locationForm, sort_order: parseInt(e.target.value) || 0 })}
+                      className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    />
+                  </div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mt-5">
+                    <input
+                      type="checkbox"
+                      checked={locationForm.enabled}
+                      onChange={(e) => setLocationForm({ ...locationForm, enabled: e.target.checked })}
+                      className="h-4 w-4 text-emerald-600 border-gray-300 rounded"
+                    />
+                    Visible on site
+                  </label>
+                </div>
+                <div className="flex gap-3">
+                  <button type="submit" disabled={locationSaving} className="px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-60">
+                    {locationSaving ? 'Saving...' : (editingLocationId ? 'Update Location' : 'Add Location')}
+                  </button>
+                  <button type="button" onClick={resetLocationForm} className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-200">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {officeLocationsLoading ? (
+              <p className="text-sm text-gray-500">Loading locations...</p>
+            ) : officeLocations.length === 0 ? (
+              <p className="text-sm text-gray-500">No locations added yet. Click "Add Location" to get started.</p>
+            ) : (
+              <div className="space-y-3">
+                {officeLocations.map((loc) => (
+                  <div key={loc.id} className="flex items-start justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <div>
+                      <p className="font-semibold text-gray-900 flex items-center gap-2">
+                        <MapPin size={14} className="text-emerald-600" />
+                        {loc.name}
+                        {!loc.enabled && <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">Hidden</span>}
+                      </p>
+                      {loc.description && <p className="text-sm text-gray-600 mt-1">{loc.description}</p>}
+                      {loc.phone && <p className="text-sm text-emerald-700 mt-1">{loc.phone}</p>}
+                    </div>
+                    <div className="flex gap-2 shrink-0 ml-4">
+                      <button onClick={() => startEditLocation(loc)} className="px-3 py-1 text-xs bg-blue-50 text-blue-700 font-medium rounded-lg hover:bg-blue-100">Edit</button>
+                      <button onClick={() => deleteLocation(loc.id)} className="px-3 py-1 text-xs bg-red-50 text-red-700 font-medium rounded-lg hover:bg-red-100">Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Hero Slides Management */}
           <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900">Hero Slides Management</h2>

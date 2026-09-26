@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Mail, Phone, MapPin, Clock, Sparkles, ArrowRight, HelpCircle, Building2, Send } from 'lucide-react'
 import HeroBackground from '../components/HeroBackground'
 
@@ -15,6 +15,40 @@ export default function Contact() {
   const [submitting, setSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState('')
   const [submitError, setSubmitError] = useState('')
+
+  // Dynamic contact info
+  const [settings, setSettings] = useState({
+    contact_email: '',
+    contact_phone: '',
+    contact_address: '',
+    contact_hours: ''
+  })
+  const [locations, setLocations] = useState([])
+  const [contactLoading, setContactLoading] = useState(true)
+
+  useEffect(() => {
+    const loadContactData = async () => {
+      try {
+        const [settingsRes, locationsRes] = await Promise.all([
+          fetch('/api/site-settings'),
+          fetch('/api/office-locations')
+        ])
+        if (settingsRes.ok) {
+          const data = await settingsRes.json()
+          setSettings(data)
+        }
+        if (locationsRes.ok) {
+          const data = await locationsRes.json()
+          setLocations(data)
+        }
+      } catch (err) {
+        console.error('Failed to load contact data', err)
+      }
+      setContactLoading(false)
+    }
+    loadContactData()
+  }, [])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -166,109 +200,133 @@ export default function Contact() {
             {/* Email Card */}
             <div className="contact-card group bg-white border border-slate-200 rounded-2xl p-8 text-center hover:border-rockhill-pine hover:shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-rockhill-pine/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <Mail className="w-8 h-8 text-rockhill-pine" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Email</h3>
                 <p className="text-slate-600 mb-4 font-light">For general inquiries</p>
-                <a href="mailto:offic.roll@gmail.com" className="text-rockhill-sunset-dark font-semibold hover:text-rockhill-sunset-dark transition-colors inline-flex items-center gap-1 group">
-                  offic.roll@gmail.com
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </a>
+                {contactLoading ? (
+                  <div className="h-5 bg-slate-100 rounded animate-pulse w-3/4 mx-auto"></div>
+                ) : (
+                  <a href={`mailto:${settings.contact_email}`} className="text-rockhill-sunset-dark font-semibold hover:text-rockhill-sunset-dark transition-colors inline-flex items-center gap-1 group">
+                    {settings.contact_email || '—'}
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                )}
               </div>
             </div>
 
             {/* Phone Card */}
             <div className="contact-card group bg-white border border-slate-200 rounded-2xl p-8 text-center hover:border-rockhill-pine hover:shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-rockhill-pine/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <Phone className="w-8 h-8 text-rockhill-pine" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Phone</h3>
                 <p className="text-slate-600 mb-4 font-light">Available for calls</p>
-                <a href="tel:+9779704800736" className="text-rockhill-sunset-dark font-semibold hover:text-rockhill-sunset-dark transition-colors inline-flex items-center gap-1 group">
-                  +977 970-4800736
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </a>
+                {contactLoading ? (
+                  <div className="h-5 bg-slate-100 rounded animate-pulse w-3/4 mx-auto"></div>
+                ) : (
+                  <a href={`tel:${settings.contact_phone?.replace(/\s|-/g, '')}`} className="text-rockhill-sunset-dark font-semibold hover:text-rockhill-sunset-dark transition-colors inline-flex items-center gap-1 group">
+                    {settings.contact_phone || '—'}
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                )}
               </div>
             </div>
 
             {/* Address Card */}
             <div className="contact-card group bg-white border border-slate-200 rounded-2xl p-8 text-center hover:border-rockhill-pine hover:shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-rockhill-pine/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <MapPin className="w-8 h-8 text-rockhill-pine" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Address</h3>
                 <p className="text-slate-600 mb-4 font-light">Visit our office</p>
-                <p className="text-rockhill-sunset-dark font-semibold leading-relaxed">
-                  Kathmandu<br />
-                  Nepal
-                </p>
+                {contactLoading ? (
+                  <div className="h-5 bg-slate-100 rounded animate-pulse w-3/4 mx-auto"></div>
+                ) : (
+                  <p className="text-rockhill-sunset-dark font-semibold leading-relaxed whitespace-pre-line">
+                    {settings.contact_address || '—'}
+                  </p>
+                )}
               </div>
             </div>
 
             {/* Hours Card */}
             <div className="contact-card group bg-white border border-slate-200 rounded-2xl p-8 text-center hover:border-rockhill-pine hover:shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-rockhill-pine/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <Clock className="w-8 h-8 text-rockhill-pine" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Hours</h3>
-                <p className="text-slate-600 font-light leading-relaxed">
-                  5 AM to 8 PM throughout the week. Open to chat.
-                </p>
+                {contactLoading ? (
+                  <div className="h-5 bg-slate-100 rounded animate-pulse w-3/4 mx-auto mt-2"></div>
+                ) : (
+                  <p className="text-slate-600 font-light leading-relaxed">
+                    {settings.contact_hours || '—'}
+                  </p>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Office Locations */}
-          <div className="bg-gradient-to-br from-slate-50/60 to-white border border-slate-200 rounded-3xl p-10 md:p-12 shadow-lg">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center">
-                <Building2 className="w-6 h-6 text-rockhill-pine" />
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
-                Additional <span className="gradient-text">Locations</span>
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Denver Location */}
-              <div className="p-6 bg-white rounded-2xl border border-slate-200 hover:border-rockhill-pine hover:shadow-lg transition-all">
-                <h3 className="text-2xl font-bold text-slate-900 mb-3 flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-rockhill-pine" />
-                  Dharan, Sunsari
-                </h3>
-                <p className="text-slate-600 mb-4 font-light leading-relaxed">
-                  Our main headquarters located in the heart of Dharan, with easy access to adventures.
-                </p>
-                <div className="text-slate-700 font-medium space-y-1 bg-[#FFF3E6]/50 p-4 rounded-xl">
-                  <div></div>
-                  <div></div>
-                  <a href="tel:+9779704800736" className="text-rockhill-sunset-dark hover:text-rockhill-sunset-dark inline-flex items-center gap-1">
-                    +977 9704800736
-                    <ArrowRight className="w-3 h-3" />
-                  </a>
+          {/* Office Locations — Dynamic */}
+          {(contactLoading || locations.length > 0) && (
+            <div className="bg-gradient-to-br from-slate-50/60 to-white border border-slate-200 rounded-3xl p-10 md:p-12 shadow-lg">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center">
+                  <Building2 className="w-6 h-6 text-rockhill-pine" />
                 </div>
+                <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
+                  Additional <span className="gradient-text">Locations</span>
+                </h2>
               </div>
 
-              {/* Jackson Hole Location */}
-              
+              {contactLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {[1, 2].map(i => (
+                    <div key={i} className="p-6 bg-white rounded-2xl border border-slate-200 animate-pulse">
+                      <div className="h-6 bg-slate-100 rounded w-1/2 mb-3"></div>
+                      <div className="h-4 bg-slate-100 rounded w-3/4 mb-2"></div>
+                      <div className="h-4 bg-slate-100 rounded w-1/2"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {locations.map((loc) => (
+                    <div key={loc.id} className="p-6 bg-white rounded-2xl border border-slate-200 hover:border-rockhill-pine hover:shadow-lg transition-all">
+                      <h3 className="text-2xl font-bold text-slate-900 mb-3 flex items-center gap-2">
+                        <MapPin className="w-5 h-5 text-rockhill-pine" />
+                        {loc.name}
+                      </h3>
+                      {loc.description && (
+                        <p className="text-slate-600 mb-4 font-light leading-relaxed">{loc.description}</p>
+                      )}
+                      {loc.phone && (
+                        <div className="text-slate-700 font-medium bg-[#FFF3E6]/50 p-4 rounded-xl">
+                          <a href={`tel:${loc.phone.replace(/\s|-/g, '')}`} className="text-rockhill-sunset-dark hover:text-rockhill-sunset-dark inline-flex items-center gap-1">
+                            {loc.phone}
+                            <ArrowRight className="w-3 h-3" />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </div>
       </section>
 
       {/* Contact Form Section */}
+
       <section className="py-24 bg-white relative overflow-hidden">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
