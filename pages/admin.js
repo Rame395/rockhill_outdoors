@@ -120,6 +120,7 @@ export default function AdminDashboard() {
     slug: '',
     name: '',
     description: '',
+    page_content: '',
     icon_name: 'HelpCircle',
     sort_order: 0,
     enabled: true,
@@ -559,7 +560,7 @@ export default function AdminDashboard() {
   }
 
   const resetCategoryForm = () => {
-    setCategoryForm({ slug: '', name: '', description: '', icon_name: 'HelpCircle', sort_order: 0, enabled: true, image_url: '' })
+    setCategoryForm({ slug: '', name: '', description: '', page_content: '', icon_name: 'HelpCircle', sort_order: 0, enabled: true, image_url: '' })
     setEditingCategoryId(null)
     setEditingCategoryType(null)
     setShowCategoryForm(false)
@@ -570,6 +571,7 @@ export default function AdminDashboard() {
       slug: cat.slug,
       name: cat.name,
       description: cat.description || '',
+      page_content: cat.page_content || '',
       icon_name: cat.icon_name || 'HelpCircle',
       sort_order: cat.sort_order || 0,
       enabled: cat.enabled !== false,
@@ -1449,6 +1451,17 @@ export default function AdminDashboard() {
                   />
                 </div>
                 <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Detailed Content (Markdown)</label>
+                  <p className="text-xs text-gray-500 mb-2">Use Markdown to format text (e.g., **bold**, ## Heading, - List). You can also use standard HTML.</p>
+                  <textarea
+                    rows={8}
+                    value={categoryForm.page_content}
+                    onChange={(e) => setCategoryForm({ ...categoryForm, page_content: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
+                    placeholder="## Welcome to our page..."
+                  />
+                </div>
+                <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Header Image (Optional)</label>
                   <div className="flex items-center gap-4">
                     <input
@@ -1592,6 +1605,17 @@ export default function AdminDashboard() {
                     value={categoryForm.description}
                     onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Detailed Content (Markdown)</label>
+                  <p className="text-xs text-gray-500 mb-2">Use Markdown to format text (e.g., **bold**, ## Heading, - List). You can also use standard HTML.</p>
+                  <textarea
+                    rows={8}
+                    value={categoryForm.page_content}
+                    onChange={(e) => setCategoryForm({ ...categoryForm, page_content: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
+                    placeholder="## Welcome to our page..."
                   />
                 </div>
                 <div>

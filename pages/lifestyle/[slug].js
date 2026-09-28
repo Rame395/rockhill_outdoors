@@ -6,6 +6,8 @@ import { useRouter } from 'next/router'
 import { ArrowLeft, ArrowRight, CheckCircle, Globe2, MapPin, Target, Compass, Megaphone } from 'lucide-react'
 import { lifestyleCategories } from '../../lib/categories'
 import HeroBackground from '../../components/HeroBackground'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export default function LifestyleCategoryPage() {
   const router = useRouter()
@@ -110,61 +112,71 @@ export default function LifestyleCategoryPage() {
           <div className="grid grid-cols-1 lg:grid-cols-[1.6fr,1.2fr] gap-10 items-start -mt-8 md:-mt-24 relative z-20">
             {/* Main content card */}
             <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 md:p-10 animate-scale-in">
-              <h2 className="text-3xl font-bold text-slate-900 mb-6">
-                How we build {category.name.toLowerCase()}
-              </h2>
-              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                Every journey with Rockhill Outdoors is intentionally designed to grow your{' '}
-                <span className="font-semibold text-rockhill-pine">{category.name.toLowerCase()}</span> through
-                real-world challenges, reflection, and facilitation. Rather than classroom lectures,
-                you learn through experiences in the mountains, on trails, and in team settings.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                <div className="space-y-4">
-                  <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                    <CheckCircle className="text-rockhill-pine" size={20} />
-                    What you&apos;ll experience
-                  </h3>
-                  <ul className="space-y-3 text-slate-600">
-                    <li className="flex gap-3">
-                      <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
-                      <span>Guided outdoor activities tailored to this growth area.</span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
-                      <span>Small-group reflections that connect adventure to real life.</span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
-                      <span>Personal challenges designed to stretch your comfort zone safely.</span>
-                    </li>
-                  </ul>
+              {category.page_content ? (
+                <div className="prose prose-lg prose-slate max-w-none">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {category.page_content}
+                  </ReactMarkdown>
                 </div>
+              ) : (
+                <>
+                  <h2 className="text-3xl font-bold text-slate-900 mb-6">
+                    How we build {category.name.toLowerCase()}
+                  </h2>
+                  <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+                    Every journey with Rockhill Outdoors is intentionally designed to grow your{' '}
+                    <span className="font-semibold text-rockhill-pine">{category.name.toLowerCase()}</span> through
+                    real-world challenges, reflection, and facilitation. Rather than classroom lectures,
+                    you learn through experiences in the mountains, on trails, and in team settings.
+                  </p>
 
-                <div className="space-y-4">
-                  <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                    <Target className="text-rockhill-pine" size={20} />
-                    Outcomes you can expect
-                  </h3>
-                  <ul className="space-y-3 text-slate-600">
-                    <li className="flex gap-3">
-                      <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
-                      <span>Stronger confidence to use these skills beyond the program.</span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
-                      <span>Real stories and experiences you can share in college or work settings.</span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
-                      <span>Clear next steps for continuing your growth at home or school.</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <CheckCircle className="text-rockhill-pine" size={20} />
+                        What you&apos;ll experience
+                      </h3>
+                      <ul className="space-y-3 text-slate-600">
+                        <li className="flex gap-3">
+                          <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
+                          <span>Guided outdoor activities tailored to this growth area.</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
+                          <span>Small-group reflections that connect adventure to real life.</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
+                          <span>Personal challenges designed to stretch your comfort zone safely.</span>
+                        </li>
+                      </ul>
+                    </div>
 
-              <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6 md:p-8 flex flex-col gap-6 items-start">
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <Target className="text-rockhill-pine" size={20} />
+                        Outcomes you can expect
+                      </h3>
+                      <ul className="space-y-3 text-slate-600">
+                        <li className="flex gap-3">
+                          <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
+                          <span>Stronger confidence to use these skills beyond the program.</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
+                          <span>Real stories and experiences you can share in college or work settings.</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="mt-1.5 flex-shrink-0 h-2 w-2 rounded-full bg-rockhill-pine" />
+                          <span>Clear next steps for continuing your growth at home or school.</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6 md:p-8 flex flex-col gap-6 items-start mt-10">
                 <div className="flex items-start gap-4">
                   <Compass className="text-rockhill-pine mt-1 flex-shrink-0" size={28} />
                   <div>
