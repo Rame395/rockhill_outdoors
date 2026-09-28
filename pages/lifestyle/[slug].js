@@ -1,10 +1,10 @@
-'use client';
+﻿'use client';
 
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ArrowLeft, ArrowRight, CheckCircle, Globe2, MapPin, Target, Compass, Megaphone } from 'lucide-react'
-import { lifestyleCategories } from '../../lib/categories'
+import { useEffect, useState } from 'react'
 import HeroBackground from '../../components/HeroBackground'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -13,16 +13,39 @@ export default function LifestyleCategoryPage() {
   const router = useRouter()
   const { slug } = router.query
 
-  const category = lifestyleCategories.find((c) => c.slug === slug)
+  const [category, setCategory] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!slug) return
+    const fetchCategory = async () => {
+      try {
+        const res = await fetch('/api/lifestyle-categories')
+        if (res.ok) {
+          const cats = await res.json()
+          setCategory(cats.find((c) => c.slug === slug))
+        }
+      } catch (error) {
+        console.error('Failed to fetch category', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchCategory()
+  }, [slug])
+
+  if (loading) {
+    return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Loading...</div>
+  }
 
   if (!category) {
-    return null
+    return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Category not found.</div>
   }
 
   return (
     <>
       <Head>
-        <title>{category.name} – Lifestyle | Rockhill Outdoors</title>
+        <title>{category.name} â€“ Lifestyle | Rockhill Outdoors</title>
         <meta
           name="description"
           content={category.description}
@@ -209,7 +232,7 @@ export default function LifestyleCategoryPage() {
                   Category snapshot
                 </h3>
                 <p className="text-slate-700 mb-6 font-medium">
-                  This lifestyle pillar threads through multiple age groups and programs—from weekend
+                  This lifestyle pillar threads through multiple age groups and programsâ€”from weekend
                   experiences to longer expeditions.
                 </p>
                 <ul className="space-y-4 text-slate-600">
