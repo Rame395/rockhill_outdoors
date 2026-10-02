@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -19,7 +19,9 @@ export default function BlogsPage() {
         const res = await fetch(`/api/blogs?${params.toString()}`)
         if (res.ok) {
           const data = await res.json()
-          setBlogs(data.blogs || [])
+          // Filter out blogs that are linked to a category so they only show on their respective category page
+          const allBlogs = data.blogs || []
+          setBlogs(allBlogs.filter(b => !b.linkedCategoryType))
         }
       } catch (error) {
         console.error('Error loading blogs:', error)
