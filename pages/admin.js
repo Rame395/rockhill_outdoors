@@ -2284,7 +2284,7 @@ export default function AdminDashboard() {
                         <td className="px-4 py-2 align-top text-gray-600">{enquiry.phone}</td>
                         <td className="px-4 py-2 align-top text-gray-600 max-w-xs">
                           <div className="truncate" title={enquiry.message || ''}>
-                            {enquiry.message || '—'}
+                            {enquiry.message || 'â€”'}
                           </div>
                         </td>
                         <td className="px-4 py-2 align-top text-gray-600">
@@ -2364,6 +2364,39 @@ export default function AdminDashboard() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-1">
+                      Link to Page
+                    </label>
+                    <select
+                      value={blogForm.linkedCategoryType || ''}
+                      onChange={(e) => setBlogForm({ ...blogForm, linkedCategoryType: e.target.value, linkedCategorySlug: '' })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    >
+                      <option value="">None (Standard Blog)</option>
+                      <option value="learning">Learning Category</option>
+                      <option value="lifestyle">Lifestyle Category</option>
+                    </select>
+                  </div>
+                  {blogForm.linkedCategoryType && (
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-1">
+                        Select Category
+                      </label>
+                      <select
+                        value={blogForm.linkedCategorySlug || ''}
+                        onChange={(e) => setBlogForm({ ...blogForm, linkedCategorySlug: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        required
+                      >
+                        <option value="">Select a category...</option>
+                        {blogForm.linkedCategoryType === 'learning' 
+                          ? learningCategories.map(c => <option key={c.slug} value={c.slug}>{c.name}</option>)
+                          : lifestyleCategories.map(c => <option key={c.slug} value={c.slug}>{c.name}</option>)
+                        }
+                      </select>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-1">
@@ -2484,7 +2517,7 @@ export default function AdminDashboard() {
                       <tr key={review.id} className="hover:bg-gray-50">
                         <td className="px-4 py-2 text-gray-900">{review.user_name || review.userName}</td>
                         <td className="px-4 py-2 text-gray-600">{review.rating}/5</td>
-                        <td className="px-4 py-2 text-gray-900">{review.title || '—'}</td>
+                        <td className="px-4 py-2 text-gray-900">{review.title || 'â€”'}</td>
                         <td className="px-4 py-2 text-gray-600 max-w-xs">
                           <div className="truncate" title={review.content}>{review.content}</div>
                         </td>
@@ -2536,8 +2569,8 @@ export default function AdminDashboard() {
                       <tr key={submission.id} className="hover:bg-gray-50">
                         <td className="px-4 py-2 text-gray-900">{submission.name}</td>
                         <td className="px-4 py-2 text-gray-600">{submission.email}</td>
-                        <td className="px-4 py-2 text-gray-600">{submission.phone || '—'}</td>
-                        <td className="px-4 py-2 text-gray-600">{submission.subject || '—'}</td>
+                        <td className="px-4 py-2 text-gray-600">{submission.phone || 'â€”'}</td>
+                        <td className="px-4 py-2 text-gray-600">{submission.subject || 'â€”'}</td>
                         <td className="px-4 py-2 text-gray-600 max-w-xs">
                           <div className="truncate" title={submission.message}>{submission.message}</div>
                         </td>

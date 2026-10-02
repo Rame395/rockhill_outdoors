@@ -14,24 +14,37 @@ export default function LifestyleCategoryPage() {
   const { slug } = router.query
 
   const [category, setCategory] = useState(null)
+  const [linkedPosts, setLinkedPosts] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!slug) return
-    const fetchCategory = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch('/api/lifestyle-categories')
-        if (res.ok) {
-          const cats = await res.json()
+        const [catRes, blogsRes] = await Promise.all([
+          fetch('/api/lifestyle-categories'),
+          fetch('/api/blogs?limit=100')
+        ])
+        
+        if (catRes.ok) {
+          const cats = await catRes.json()
           setCategory(cats.find((c) => c.slug === slug))
         }
+
+        if (blogsRes.ok) {
+          const blogsData = await blogsRes.json()
+          const matchingPosts = (blogsData.blogs || []).filter(
+            b => b.linkedCategoryType === 'lifestyle' && b.linkedCategorySlug === slug
+          )
+          setLinkedPosts(matchingPosts)
+        }
       } catch (error) {
-        console.error('Failed to fetch category', error)
+        console.error('Failed to fetch data', error)
       } finally {
         setLoading(false)
       }
     }
-    fetchCategory()
+    fetchData()
   }, [slug])
 
   if (loading) {
@@ -126,6 +139,39 @@ export default function LifestyleCategoryPage() {
               {category.description}
             </p>
           </div>
+
+          {linkedPosts.length > 0 && (
+            <div className="mt-16 relative z-20">
+              <h2 className="text-3xl font-bold text-slate-900 mb-8">
+                Journeys & Itineraries
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {linkedPosts.map(post => (
+                  <Link key={post.slug} href={/blogs/ + post.slug} className="group block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                    {post.featuredImage && (
+                      <div className="aspect-[4/3] w-full overflow-hidden">
+                        <img src={post.featuredImage} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <div className="text-sm text-rockhill-pine font-bold mb-2 uppercase tracking-wide">
+                        {new Date(post.publishedDate || post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-rockhill-sunset transition-colors">
+                        {post.title}
+                      </h3>
+                      <p className="text-slate-600 line-clamp-3 mb-4">
+                        {post.excerpt || 'Read more about this journey...'}
+                      </p>
+                      <div className="flex items-center text-rockhill-sunset font-semibold text-sm">
+                        View Itinerary <ArrowRight size={16} className="ml-1" />
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -274,6 +320,39 @@ export default function LifestyleCategoryPage() {
               </div>
             </aside>
           </div>
+
+          {linkedPosts.length > 0 && (
+            <div className="mt-16 relative z-20">
+              <h2 className="text-3xl font-bold text-slate-900 mb-8">
+                Journeys & Itineraries
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {linkedPosts.map(post => (
+                  <Link key={post.slug} href={/blogs/ + post.slug} className="group block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                    {post.featuredImage && (
+                      <div className="aspect-[4/3] w-full overflow-hidden">
+                        <img src={post.featuredImage} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <div className="text-sm text-rockhill-pine font-bold mb-2 uppercase tracking-wide">
+                        {new Date(post.publishedDate || post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-rockhill-sunset transition-colors">
+                        {post.title}
+                      </h3>
+                      <p className="text-slate-600 line-clamp-3 mb-4">
+                        {post.excerpt || 'Read more about this journey...'}
+                      </p>
+                      <div className="flex items-center text-rockhill-sunset font-semibold text-sm">
+                        View Itinerary <ArrowRight size={16} className="ml-1" />
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

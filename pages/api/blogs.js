@@ -25,7 +25,8 @@ export default async function handler(req, res) {
     try {
       const [rows] = await pool.query(
         `SELECT id, title, slug, excerpt, category, tags, featured_image AS featuredImage,
-                author_name AS authorName, published_date AS publishedDate, created_at AS createdAt
+                author_name AS authorName, published_date AS publishedDate, created_at AS createdAt,
+                linked_category_type AS linkedCategoryType, linked_category_slug AS linkedCategorySlug
          FROM blogs
          ORDER BY COALESCE(published_date, created_at) DESC
          LIMIT ? OFFSET ?`,
@@ -59,7 +60,9 @@ export default async function handler(req, res) {
       tags,
       featuredImage,
       authorName,
-      publishedDate
+      publishedDate,
+      linkedCategoryType,
+      linkedCategorySlug
     } = req.body || {};
 
     if (!title || !content) {
@@ -71,8 +74,8 @@ export default async function handler(req, res) {
     try {
       const [result] = await pool.query(
         `INSERT INTO blogs
-         (title, slug, excerpt, content, category, tags, featured_image, author_name, published_date)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         (title, slug, excerpt, content, category, tags, featured_image, author_name, published_date, linked_category_type, linked_category_slug)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           title.trim(),
           slug,
@@ -82,7 +85,9 @@ export default async function handler(req, res) {
           (tags || '').trim(),
           (featuredImage || '').trim(),
           (authorName || '').trim(),
-          publishedDate || null
+          publishedDate || null,
+          linkedCategoryType || null,
+          linkedCategorySlug || null
         ]
       );
 
@@ -97,7 +102,9 @@ export default async function handler(req, res) {
           tags,
           featuredImage,
           authorName,
-          publishedDate
+          publishedDate,
+          linkedCategoryType,
+          linkedCategorySlug
         }
       });
     } catch (error) {

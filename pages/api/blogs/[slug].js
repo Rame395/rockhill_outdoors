@@ -15,7 +15,9 @@ export default async function handler(req, res) {
                 featured_image AS featuredImage,
                 author_name AS authorName,
                 published_date AS publishedDate,
-                created_at AS createdAt
+                created_at AS createdAt,
+                linked_category_type AS linkedCategoryType,
+                linked_category_slug AS linkedCategorySlug
          FROM blogs
          WHERE slug = ?
          LIMIT 1`,
@@ -42,7 +44,9 @@ export default async function handler(req, res) {
       tags,
       featuredImage,
       authorName,
-      publishedDate
+      publishedDate,
+      linkedCategoryType,
+      linkedCategorySlug
     } = req.body || {};
 
     if (!title || !content) {
@@ -53,7 +57,8 @@ export default async function handler(req, res) {
       const [result] = await pool.query(
         `UPDATE blogs
          SET title = ?, excerpt = ?, content = ?, category = ?, tags = ?,
-             featured_image = ?, author_name = ?, published_date = ?
+             featured_image = ?, author_name = ?, published_date = ?,
+             linked_category_type = ?, linked_category_slug = ?
          WHERE slug = ?`,
         [
           title.trim(),
@@ -64,6 +69,8 @@ export default async function handler(req, res) {
           (featuredImage || '').trim(),
           (authorName || '').trim(),
           publishedDate || null,
+          linkedCategoryType || null,
+          linkedCategorySlug || null,
           slug
         ]
       );
@@ -82,7 +89,9 @@ export default async function handler(req, res) {
           tags,
           featuredImage,
           authorName,
-          publishedDate
+          publishedDate,
+          linkedCategoryType,
+          linkedCategorySlug
         }
       });
     } catch (error) {
