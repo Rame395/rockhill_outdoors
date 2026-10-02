@@ -55,7 +55,9 @@ export default function AdminDashboard() {
     tags: '',
     featuredImage: '',
     authorName: '',
-    publishedDate: ''
+    publishedDate: '',
+    linkedCategoryType: '',
+    linkedCategorySlug: ''
   })
   const [reviews, setReviews] = useState([])
   const [reviewsLoading, setReviewsLoading] = useState(false)
@@ -896,7 +898,9 @@ export default function AdminDashboard() {
       tags: '',
       featuredImage: '',
       authorName: '',
-      publishedDate: ''
+      publishedDate: '',
+      linkedCategoryType: '',
+      linkedCategorySlug: ''
     })
     setEditingBlogSlug(null)
     setBlogImagePreview('')
@@ -949,7 +953,9 @@ export default function AdminDashboard() {
       tags: blog.tags || '',
       featuredImage: blog.featuredImage || '',
       authorName: blog.authorName || '',
-      publishedDate: blog.publishedDate ? blog.publishedDate.split('T')[0] : ''
+      publishedDate: blog.publishedDate ? blog.publishedDate.split('T')[0] : '',
+      linkedCategoryType: blog.linkedCategoryType || '',
+      linkedCategorySlug: blog.linkedCategorySlug || ''
     })
     setEditingBlogSlug(blog.slug)
     setBlogImagePreview(blog.featuredImage || '')
