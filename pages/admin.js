@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Head from 'next/head'
 import { useState } from 'react'
@@ -944,21 +944,58 @@ export default function AdminDashboard() {
     setShowBlogForm(true)
   }
 
-  const startEditBlog = (blog) => {
-    setBlogForm({
-      title: blog.title || '',
-      excerpt: blog.excerpt || '',
-      content: blog.content || '',
-      category: blog.category || '',
-      tags: blog.tags || '',
-      featuredImage: blog.featuredImage || '',
-      authorName: blog.authorName || '',
-      publishedDate: blog.publishedDate ? blog.publishedDate.split('T')[0] : '',
-      linkedCategoryType: blog.linkedCategoryType || '',
-      linkedCategorySlug: blog.linkedCategorySlug || ''
-    })
+  const startEditBlog = async (blog) => {
+    // The list API does not return `content`, so fetch the full blog by slug first
+    try {
+      const res = await fetch(`/api/blogs/${blog.slug}`)
+      if (res.ok) {
+        const data = await res.json()
+        const full = data.blog || data
+        setBlogForm({
+          title: full.title || '',
+          excerpt: full.excerpt || '',
+          content: full.content || '',
+          category: full.category || '',
+          tags: full.tags || '',
+          featuredImage: full.featuredImage || '',
+          authorName: full.authorName || '',
+          publishedDate: full.publishedDate ? full.publishedDate.split('T')[0] : '',
+          linkedCategoryType: full.linkedCategoryType || '',
+          linkedCategorySlug: full.linkedCategorySlug || ''
+        })
+        setBlogImagePreview(full.featuredImage || '')
+      } else {
+        // Fallback to partial data if fetch fails
+        setBlogForm({
+          title: blog.title || '',
+          excerpt: blog.excerpt || '',
+          content: blog.content || '',
+          category: blog.category || '',
+          tags: blog.tags || '',
+          featuredImage: blog.featuredImage || '',
+          authorName: blog.authorName || '',
+          publishedDate: blog.publishedDate ? blog.publishedDate.split('T')[0] : '',
+          linkedCategoryType: blog.linkedCategoryType || '',
+          linkedCategorySlug: blog.linkedCategorySlug || ''
+        })
+        setBlogImagePreview(blog.featuredImage || '')
+      }
+    } catch {
+      setBlogForm({
+        title: blog.title || '',
+        excerpt: blog.excerpt || '',
+        content: blog.content || '',
+        category: blog.category || '',
+        tags: blog.tags || '',
+        featuredImage: blog.featuredImage || '',
+        authorName: blog.authorName || '',
+        publishedDate: blog.publishedDate ? blog.publishedDate.split('T')[0] : '',
+        linkedCategoryType: blog.linkedCategoryType || '',
+        linkedCategorySlug: blog.linkedCategorySlug || ''
+      })
+      setBlogImagePreview(blog.featuredImage || '')
+    }
     setEditingBlogSlug(blog.slug)
-    setBlogImagePreview(blog.featuredImage || '')
     setShowBlogForm(true)
   }
 
