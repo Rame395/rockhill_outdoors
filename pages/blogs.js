@@ -84,9 +84,10 @@ export default function BlogsPage() {
                   >
                     <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group-hover:shadow-md transition-shadow">
                       {blog.featuredImage && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <Image src={blog.featuredImage} alt={blog.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
-                      )}
+                          <div className="relative w-full h-56 md:h-64">
+                            <Image src={blog.featuredImage} alt={blog.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
+                          </div>
+                        )}
                       <div className="p-5 md:p-6">
                         <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-3">
                           {blog.publishedDate && (

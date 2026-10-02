@@ -1,4 +1,4 @@
-﻿import Head from 'next/head'
+import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect, useCallback, useRef } from 'react'
@@ -297,8 +297,8 @@ export default function Home() {
                     
                     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center py-12">
                       <div className="animate-fade-in mb-6 inline-block">
-                        <div className="w-24 h-24 sm:w-28 sm:h-28 bg-white rounded-full flex items-center justify-center mx-auto shadow-xl p-3 sm:p-4">
-                          <Image src="/logo.png" alt="Rockhill Outdoors Logo" fill className="object-contain" />
+                        <div className="w-24 h-24 sm:w-28 sm:h-28 bg-white rounded-full flex items-center justify-center mx-auto shadow-xl p-3 sm:p-4 relative">
+                          <Image src="/logo.png" alt="Rockhill Outdoors Logo" fill className="object-contain p-3 sm:p-4" />
                         </div>
                       </div>
                       
@@ -351,8 +351,8 @@ export default function Home() {
             
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center py-12">
               <div className="animate-fade-in mb-6 inline-block">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 bg-white rounded-full flex items-center justify-center mx-auto shadow-xl p-3 sm:p-4">
-                  <Image src="/logo.png" alt="Rockhill Outdoors Logo" fill className="object-contain" />
+                <div className="w-24 h-24 sm:w-28 sm:h-28 bg-white rounded-full flex items-center justify-center mx-auto shadow-xl p-3 sm:p-4 relative">
+                  <Image src="/logo.png" alt="Rockhill Outdoors Logo" fill className="object-contain p-3 sm:p-4" />
                 </div>
               </div>
               
