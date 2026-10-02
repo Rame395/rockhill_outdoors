@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Head from 'next/head'
 import { useState } from 'react'
@@ -2290,7 +2290,7 @@ export default function AdminDashboard() {
                         <td className="px-4 py-2 align-top text-gray-600">{enquiry.phone}</td>
                         <td className="px-4 py-2 align-top text-gray-600 max-w-xs">
                           <div className="truncate" title={enquiry.message || ''}>
-                            {enquiry.message || 'â€”'}
+                            {enquiry.message || 'Ã¢â‚¬â€'}
                           </div>
                         </td>
                         <td className="px-4 py-2 align-top text-gray-600">
@@ -2332,7 +2332,7 @@ export default function AdminDashboard() {
                     <input
                       type="text"
                       value={blogForm.title}
-                      onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })}
+                      onChange={(e) => setBlogForm(prev => ({ ...prev, title: e.target.value }))}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                     />
@@ -2344,7 +2344,7 @@ export default function AdminDashboard() {
                     <input
                       type="text"
                       value={blogForm.authorName}
-                      onChange={(e) => setBlogForm({ ...blogForm, authorName: e.target.value })}
+                      onChange={(e) => setBlogForm(prev => ({ ...prev, authorName: e.target.value }))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                     />
                   </div>
@@ -2355,7 +2355,7 @@ export default function AdminDashboard() {
                     <input
                       type="text"
                       value={blogForm.category}
-                      onChange={(e) => setBlogForm({ ...blogForm, category: e.target.value })}
+                      onChange={(e) => setBlogForm(prev => ({ ...prev, category: e.target.value }))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                     />
                   </div>
@@ -2366,7 +2366,7 @@ export default function AdminDashboard() {
                     <input
                       type="date"
                       value={blogForm.publishedDate}
-                      onChange={(e) => setBlogForm({ ...blogForm, publishedDate: e.target.value })}
+                      onChange={(e) => setBlogForm(prev => ({ ...prev, publishedDate: e.target.value }))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                     />
                   </div>
@@ -2376,7 +2376,7 @@ export default function AdminDashboard() {
                     </label>
                     <select
                       value={blogForm.linkedCategoryType || ''}
-                      onChange={(e) => setBlogForm({ ...blogForm, linkedCategoryType: e.target.value, linkedCategorySlug: '' })}
+                      onChange={(e) => setBlogForm(prev => ({ ...prev, linkedCategoryType: e.target.value, linkedCategorySlug: '' }))}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                     >
                       <option value="">None (Standard Blog)</option>
@@ -2391,7 +2391,7 @@ export default function AdminDashboard() {
                       </label>
                       <select
                         value={blogForm.linkedCategorySlug || ''}
-                        onChange={(e) => setBlogForm({ ...blogForm, linkedCategorySlug: e.target.value })}
+                        onChange={(e) => setBlogForm(prev => ({ ...prev, linkedCategorySlug: e.target.value }))}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                         required
                       >
@@ -2428,7 +2428,7 @@ export default function AdminDashboard() {
                   <label className="block text-sm font-semibold text-gray-900 mb-1">Excerpt</label>
                   <textarea
                     value={blogForm.excerpt}
-                    onChange={(e) => setBlogForm({ ...blogForm, excerpt: e.target.value })}
+                    onChange={(e) => setBlogForm(prev => ({ ...prev, excerpt: e.target.value }))}
                     rows={2}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                   />
@@ -2439,7 +2439,7 @@ export default function AdminDashboard() {
                   </label>
                   <RichTextEditor
                     value={blogForm.content}
-                    onChange={(content) => setBlogForm({ ...blogForm, content })}
+                    onChange={(content) => setBlogForm(prev => ({ ...prev, content }))}
                   />
                 </div>
                 <div className="flex gap-2">
@@ -2523,7 +2523,7 @@ export default function AdminDashboard() {
                       <tr key={review.id} className="hover:bg-gray-50">
                         <td className="px-4 py-2 text-gray-900">{review.user_name || review.userName}</td>
                         <td className="px-4 py-2 text-gray-600">{review.rating}/5</td>
-                        <td className="px-4 py-2 text-gray-900">{review.title || 'â€”'}</td>
+                        <td className="px-4 py-2 text-gray-900">{review.title || 'Ã¢â‚¬â€'}</td>
                         <td className="px-4 py-2 text-gray-600 max-w-xs">
                           <div className="truncate" title={review.content}>{review.content}</div>
                         </td>
@@ -2575,8 +2575,8 @@ export default function AdminDashboard() {
                       <tr key={submission.id} className="hover:bg-gray-50">
                         <td className="px-4 py-2 text-gray-900">{submission.name}</td>
                         <td className="px-4 py-2 text-gray-600">{submission.email}</td>
-                        <td className="px-4 py-2 text-gray-600">{submission.phone || 'â€”'}</td>
-                        <td className="px-4 py-2 text-gray-600">{submission.subject || 'â€”'}</td>
+                        <td className="px-4 py-2 text-gray-600">{submission.phone || 'Ã¢â‚¬â€'}</td>
+                        <td className="px-4 py-2 text-gray-600">{submission.subject || 'Ã¢â‚¬â€'}</td>
                         <td className="px-4 py-2 text-gray-600 max-w-xs">
                           <div className="truncate" title={submission.message}>{submission.message}</div>
                         </td>
