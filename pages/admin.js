@@ -908,7 +908,7 @@ export default function AdminDashboard() {
 
   const saveBlog = async (e) => {
     e.preventDefault()
-    const { title, excerpt, content, category, tags, featuredImage, authorName, publishedDate } = blogForm
+    const { title, excerpt, content, category, tags, featuredImage, authorName, publishedDate, linkedCategoryType, linkedCategorySlug } = blogForm
     if (!title || !content) {
       alert('Title and content are required')
       return
@@ -922,7 +922,9 @@ export default function AdminDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title, excerpt, content, category, tags, featuredImage, authorName,
-          publishedDate: publishedDate || null
+          publishedDate: publishedDate || null,
+          linkedCategoryType: linkedCategoryType || null,
+          linkedCategorySlug: linkedCategorySlug || null
         })
       })
       if (!res.ok) {
