@@ -1,6 +1,7 @@
-'use client';
+﻿'use client';
 
 import Head from 'next/head'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { CheckCircle, AlertCircle, Globe, Users, Sparkles, ArrowRight, Compass, MapPin } from 'lucide-react'
@@ -75,7 +76,7 @@ export default function Lifestyle() {
       description: 'Trek through dramatic mountain peaks, turquoise glacial lakes, and pristine wilderness. Experience the raw beauty of South America\'s most iconic landscape.',
       duration: '14 days',
       level: 'Intermediate',
-      icon: '⛰️'
+      icon: 'â›°ï¸'
     },
     {
       name: 'Iceland Explorer',
@@ -83,7 +84,7 @@ export default function Lifestyle() {
       description: 'Hike volcanic landscapes, witness waterfalls, explore glaciers, and immerse in Icelandic culture. Experience nature\'s raw power and beauty.',
       duration: '10 days',
       level: 'Beginner to Intermediate',
-      icon: '🌋'
+      icon: 'ðŸŒ‹'
     },
     {
       name: 'Nepal Trekking Journey',
@@ -91,7 +92,7 @@ export default function Lifestyle() {
       description: 'Trek to legendary destinations like Everest Base Camp or the Annapurna Circuit. Experience Himalayan mountains and vibrant Nepali culture.',
       duration: '16 days',
       level: 'Intermediate to Advanced',
-      icon: '🏔️'
+      icon: 'ðŸ”ï¸'
     },
     {
       name: 'Costa Rica Wildlife Immersion',
@@ -99,7 +100,7 @@ export default function Lifestyle() {
       description: 'Zip-line through rainforests, hike volcanic trails, explore cloud forests, and encounter exotic wildlife in one of Earth\'s most biodiverse regions.',
       duration: '8 days',
       level: 'Beginner',
-      icon: '🦜'
+      icon: 'ðŸ¦œ'
     },
     {
       name: 'African Safari & Climbing',
@@ -107,7 +108,7 @@ export default function Lifestyle() {
       description: 'Combine wildlife safari adventure with Mount Kilimanjaro climbing. Experience Africa\'s most iconic landscapes and wildlife.',
       duration: '12 days',
       level: 'Intermediate',
-      icon: '🦁'
+      icon: 'ðŸ¦'
     },
     {
       name: 'Southeast Asia Explorer',
@@ -115,7 +116,7 @@ export default function Lifestyle() {
       description: 'Rock climb in Railay Beach, trek through jungle mountains, and explore ancient temples. Blend adventure with cultural immersion.',
       duration: '11 days',
       level: 'All Levels',
-      icon: '🧗'
+      icon: 'ðŸ§—'
     }
   ]
 
@@ -286,7 +287,7 @@ export default function Lifestyle() {
               Lifestyle Categories
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto font-light leading-relaxed">
-              Choose how you want adventure to shape your everyday life—from hobbies to extreme challenges. Each
+              Choose how you want adventure to shape your everyday lifeâ€”from hobbies to extreme challenges. Each
               category opens a different way of experiencing the world with Rockhill Outdoors.
             </p>
           </div>
@@ -303,7 +304,7 @@ export default function Lifestyle() {
                   {category.image_url && (
                     <div className="w-full h-48 relative overflow-hidden shrink-0">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={category.image_url} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <Image src={category.image_url} alt={category.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
                     </div>
                   )}
 
@@ -377,7 +378,7 @@ export default function Lifestyle() {
                 </div>
                 
                 <div className="relative z-10 text-center p-8">
-                  <div className="text-9xl mb-6 animate-float">✈️</div>
+                  <div className="text-9xl mb-6 animate-float">âœˆï¸</div>
                   <h3 className="text-3xl font-bold text-white mb-3">
                     Explore the World
                   </h3>
@@ -405,7 +406,7 @@ export default function Lifestyle() {
                 The Rockhill <span className="gradient-text">Lifestyle</span>
               </h2>
               <p className="text-slate-600 mb-6 text-lg font-light leading-relaxed">
-                The greatest adventures happen when you step outside your comfort zone and into the wild. At Rockhill Outdoors, we believe that travel is more than just visiting destinations—it's about transforming yourself through experiences.
+                The greatest adventures happen when you step outside your comfort zone and into the wild. At Rockhill Outdoors, we believe that travel is more than just visiting destinationsâ€”it's about transforming yourself through experiences.
               </p>
               
               <div className="space-y-5">

@@ -1,4 +1,5 @@
-import Head from 'next/head'
+﻿import Head from 'next/head'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Mountain, Compass, ArrowRight, Sparkles, BookOpen, Globe2, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -297,7 +298,7 @@ export default function Home() {
                     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center py-12">
                       <div className="animate-fade-in mb-6 inline-block">
                         <div className="w-24 h-24 sm:w-28 sm:h-28 bg-white rounded-full flex items-center justify-center mx-auto shadow-xl p-3 sm:p-4">
-                          <img src="/logo.png" alt="Rockhill Outdoors Logo" className="w-full h-full object-contain" />
+                          <Image src="/logo.png" alt="Rockhill Outdoors Logo" fill className="object-contain" />
                         </div>
                       </div>
                       
@@ -351,7 +352,7 @@ export default function Home() {
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center py-12">
               <div className="animate-fade-in mb-6 inline-block">
                 <div className="w-24 h-24 sm:w-28 sm:h-28 bg-white rounded-full flex items-center justify-center mx-auto shadow-xl p-3 sm:p-4">
-                  <img src="/logo.png" alt="Rockhill Outdoors Logo" className="w-full h-full object-contain" />
+                  <Image src="/logo.png" alt="Rockhill Outdoors Logo" fill className="object-contain" />
                 </div>
               </div>
               
@@ -384,7 +385,7 @@ export default function Home() {
               Explore Our <span className="gradient-text">Categories</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto font-light leading-relaxed">
-              Start from where you are—learn with us, travel with us, or do both. Choose a category to discover
+              Start from where you areâ€”learn with us, travel with us, or do both. Choose a category to discover
               learning journeys and lifestyle experiences that fit you.
             </p>
           </div>
@@ -413,7 +414,7 @@ export default function Home() {
                       {category.image_url && (
                         <div className="w-full h-48 relative overflow-hidden">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={category.image_url} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                          <Image src={category.image_url} alt={category.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
                         </div>
                       )}
 
@@ -465,7 +466,7 @@ export default function Home() {
                       {category.image_url && (
                         <div className="w-full h-48 relative overflow-hidden">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={category.image_url} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                          <Image src={category.image_url} alt={category.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
                         </div>
                       )}
 

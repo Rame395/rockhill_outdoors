@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import Head from 'next/head'
+import Image from 'next/image'
 import Link from 'next/link'
 import { CalendarDays, MapPin, User } from 'lucide-react'
 import HeroBackground from '../components/HeroBackground'
@@ -55,7 +56,7 @@ export default function BlogsPage() {
               Journal & <span className="text-rockhill-sunset">Stories</span>
               </h1>
             <p className="text-lg md:text-xl max-w-2xl text-slate-50">
-              Read about our latest trips, learning programs, and community adventures—written like
+              Read about our latest trips, learning programs, and community adventuresâ€”written like
               blog posts, crafted from the trail.
             </p>
           </div>
@@ -84,11 +85,7 @@ export default function BlogsPage() {
                     <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group-hover:shadow-md transition-shadow">
                       {blog.featuredImage && (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={blog.featuredImage}
-                          alt={blog.title}
-                          className="w-full h-56 md:h-64 object-cover"
-                        />
+                        <Image src={blog.featuredImage} alt={blog.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                       )}
                       <div className="p-5 md:p-6">
                         <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-3">

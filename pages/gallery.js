@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import Head from 'next/head'
+import Image from 'next/image'
 import { Image as ImageIcon, Loader2 } from 'lucide-react'
 import HeroBackground from '../components/HeroBackground'
 
@@ -80,13 +81,7 @@ export default function GalleryPage() {
                     key={image.id}
                     className="group relative aspect-square overflow-hidden rounded-lg bg-slate-200 shadow-sm hover:shadow-md transition-shadow"
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={getImageUrl(image)}
-                      alt={image.originalFilename || 'Gallery image'}
-                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
+                    <Image src={getImageUrl(image)} alt={image.originalFilename || 'Gallery image'} fill className="object-contain group-hover:scale-105 transition-transform duration-300" sizes="(max-width: 768px) 50vw, 25vw" />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
                   </div>
                 ))}

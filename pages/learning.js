@@ -1,6 +1,7 @@
-'use client';
+﻿'use client';
 
 import Head from 'next/head'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { CheckCircle, AlertCircle, Award, Users, Target, Sparkles, ArrowRight, GraduationCap } from 'lucide-react'
@@ -74,42 +75,42 @@ export default function Learning() {
       level: 'Beginner',
       description: 'Learn to navigate using maps, compasses, and GPS technology. Master the fundamentals of wilderness navigation for safe exploration.',
       duration: '4 weeks',
-      icon: '🧭'
+      icon: 'ðŸ§­'
     },
     {
       title: 'Rock Climbing Fundamentals',
       level: 'Beginner to Intermediate',
       description: 'Develop essential climbing skills including belay techniques, rope management, and safety protocols. Build confidence on indoor and outdoor routes.',
       duration: '6 weeks',
-      icon: '🧗'
+      icon: 'ðŸ§—'
     },
     {
       title: 'Wilderness First Aid & Safety',
       level: 'All Levels',
       description: 'Comprehensive training in emergency response, wound care, and evacuation procedures. Become a safer, more prepared outdoor adventurer.',
       duration: '2 weeks',
-      icon: '🏥'
+      icon: 'ðŸ¥'
     },
     {
       title: 'Advanced Alpine Expedition',
       level: 'Advanced',
       description: 'Master high-altitude mountaineering techniques, extreme weather survival, and expedition logistics. Train for your dream summit.',
       duration: '8 weeks',
-      icon: '⛰️'
+      icon: 'â›°ï¸'
     },
     {
       title: 'Backcountry Camping & Survival',
       level: 'Intermediate',
       description: 'Learn essential camping skills, shelter building, fire management, and wilderness survival techniques for extended trips.',
       duration: '3 weeks',
-      icon: '🏕️'
+      icon: 'ðŸ•ï¸'
     },
     {
       title: 'Leave No Trace & Environmental Ethics',
       level: 'All Levels',
       description: 'Understand sustainable outdoor practices and environmental conservation. Explore and protect the wilderness responsibly.',
       duration: '1 week',
-      icon: '🌲'
+      icon: 'ðŸŒ²'
     }
   ]
 
@@ -285,7 +286,7 @@ export default function Learning() {
                   {category.image_url && (
                     <div className="w-full h-48 relative overflow-hidden shrink-0">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={category.image_url} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <Image src={category.image_url} alt={category.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
                     </div>
                   )}
 
@@ -359,7 +360,7 @@ export default function Learning() {
                 </div>
                 
                 <div className="relative z-10 text-center p-8">
-                  <div className="text-8xl mb-6">📚</div>
+                  <div className="text-8xl mb-6">ðŸ“š</div>
                   <h3 className="text-3xl font-bold text-white mb-3">
                     Start Learning Today
                   </h3>
